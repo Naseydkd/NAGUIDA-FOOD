@@ -3,8 +3,11 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const db = require('../db');
 const bcrypt = require('bcryptjs');
 
+const hasGoogleOAuthConfig = process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET && process.env.GOOGLE_CALLBACK_URL;
+
 // Configuration de la stratégie Google OAuth
-passport.use(new GoogleStrategy({
+if (hasGoogleOAuthConfig) {
+  passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: process.env.GOOGLE_CALLBACK_URL
@@ -59,6 +62,7 @@ passport.use(new GoogleStrategy({
     }
   }
 ));
+}
 
 // Sérialisation de l'utilisateur pour la session
 passport.serializeUser((user, done) => {

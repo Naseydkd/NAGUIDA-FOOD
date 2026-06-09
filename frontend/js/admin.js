@@ -2,6 +2,11 @@
 const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
   ? 'http://localhost:3000/api'
   : '/api';
+const CLOUDINARY_CONFIG = {
+    cloudName: 'dnx3uefmc',
+    uploadPreset: 'boule-de-neige',
+    folder: 'naguida-food/products'
+};
 let currentAdmin = null;
 let allOrders = [];
 let allProducts = [];
@@ -525,15 +530,28 @@ async function handleImageUpload(event) {
     const preview = document.getElementById('preview-img');
     const btnUpload = document.getElementById('btn-upload-image');
 
+    if (!file.type.startsWith('image/')) {
+        showNotification('Sélectionne un fichier image valide', 'error');
+        event.target.value = '';
+        return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+        showNotification('Image trop volumineuse. Maximum: 5 MB', 'error');
+        event.target.value = '';
+        return;
+    }
+
     btnUpload.textContent = '⏳ Upload en cours...';
     btnUpload.disabled = true;
 
     try {
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('upload_preset', 'boule-de-neige');
+        formData.append('upload_preset', CLOUDINARY_CONFIG.uploadPreset);
+        formData.append('folder', CLOUDINARY_CONFIG.folder);
 
-        const res = await fetch('https://api.cloudinary.com/v1_1/dnx3uefmc/image/upload', {
+        const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CONFIG.cloudName}/image/upload`, {
             method: 'POST',
             body: formData
         });
@@ -546,9 +564,10 @@ async function handleImageUpload(event) {
             preview.style.display = 'block';
             showNotification('Image uploadée ✅', 'success');
         } else {
-            showNotification('Erreur upload: ' + (data.error?.message || 'inconnu'), 'error');
+            showNotification('Erreur Cloudinary: ' + (data.error?.message || 'upload refusé'), 'error');
         }
     } catch (e) {
+        console.error('Erreur upload Cloudinary:', e);
         showNotification('Erreur réseau lors de l\'upload', 'error');
     } finally {
         btnUpload.textContent = '📤 Upload Image';
@@ -685,7 +704,13 @@ async function submitProduct(e) {
 
     const productId = document.getElementById('product-id').value;
     const imageUrl = document.getElementById('product-image').value;
+    const imageFile = document.getElementById('product-image-file').files[0];
     
+    if (imageFile && !imageUrl.includes('res.cloudinary.com')) {
+        showNotification('Attends la fin de l\'upload Cloudinary avant d\'enregistrer', 'error');
+        return;
+    }
+
     // Vérifier la taille de l'image
     if (imageUrl && imageUrl.startsWith('data:') && imageUrl.length > 1000000) {
         showNotification('Image trop volumineuse. Utilise une URL ou une petite image', 'error');

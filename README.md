@@ -308,46 +308,49 @@ Background : linear-gradient(135deg, #ff6f00, #2e7d32, #8d6e63, #d4af37, #00695c
 
 ## 🚀 Déploiement
 
-### Option 1: Render (Gratuit) ⭐ RECOMMANDÉ
+### Option 1: Vercel ⭐ RECOMMANDÉ
 
-#### 1. Créer compte (2 min)
-- Aller sur https://render.com
+#### 1. Créer compte
+- Aller sur https://vercel.com
 - S'inscrire avec GitHub
 
-#### 2. Base de données PostgreSQL (3 min)
-1. Dashboard > New > PostgreSQL
-2. Nom: `naguida-food-db`
-3. Plan: **Free**
-4. Créer et **copier l'Internal Database URL**
-
-#### 3. Web Service (5 min)
-1. Dashboard > New > Web Service
+#### 2. Importer le projet
+1. Dashboard > Add New > Project
 2. Connecter votre repo GitHub
-3. Configuration:
-   - Name: `naguida-food`
-   - Root Directory: `backend`
-   - Build Command: `npm install`
-   - Start Command: `npm start`
-   - Plan: **Free**
+3. Garder la racine du projet comme Root Directory
+4. Vercel utilise `vercel.json` pour servir le frontend et l'API
 
-#### 4. Variables d'environnement (2 min)
+#### 3. Base de données PostgreSQL
+Utiliser une base PostgreSQL externe compatible Vercel, par exemple Supabase, Neon ou Vercel Postgres, puis copier l'URL de connexion.
+
+#### 4. Variables d'environnement
+Dans Vercel > Project Settings > Environment Variables :
 ```
-DATABASE_URL = [URL copiée étape 2]
+DATABASE_URL = [URL PostgreSQL]
 NODE_ENV = production
-PORT = 3000
+PUBLIC_URL = https://votre-site.vercel.app
+SESSION_SECRET = une-cle-longue-et-secrete
 EMAIL_USER = votre-email@gmail.com
 EMAIL_PASS = votre-mot-de-passe-app
 EMAIL_FROM = "NAGUIDA FOOD <no-reply@naguidafood.com>"
 ```
 
-#### 5. Initialiser la base (3 min)
-Une fois déployé, dans le Shell Render :
+Pour Google OAuth, ajouter aussi :
+```
+GOOGLE_CLIENT_ID = votre-client-id
+GOOGLE_CLIENT_SECRET = votre-client-secret
+GOOGLE_CALLBACK_URL = https://votre-site.vercel.app/api/auth/google/callback
+```
+
+#### 5. Initialiser la base
+Depuis votre machine, avec `DATABASE_URL` configurée vers la base de production :
 ```bash
-node seed_african.js
+psql "$DATABASE_URL" < backend/schema.sql
+node backend/seed_african.js
 ```
 
 #### 6. ✅ C'est en ligne !
-URL: `https://naguida-food.onrender.com`
+URL: `https://votre-site.vercel.app`
 
 ### Option 2: Heroku
 

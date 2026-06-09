@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "installCommand": "npm install",
   "builds": [
     {
       "src": "backend/server.js",
@@ -14,6 +15,10 @@
     {
       "src": "/api/(.*)",
       "dest": "/backend/server.js"
+    },
+    {
+      "src": "/",
+      "dest": "/frontend/index.html"
     },
     {
       "src": "/(.*)",

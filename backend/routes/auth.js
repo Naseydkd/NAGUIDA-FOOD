@@ -2,7 +2,13 @@ const router = require('express').Router();
 const passport = require('../config/passport');
 
 // Route pour démarrer l'authentification Google
-router.get('/google', 
+router.get('/google',
+  (req, res, next) => {
+    if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET || !process.env.GOOGLE_CALLBACK_URL) {
+      return res.status(503).json({ error: 'Google OAuth non configuré' });
+    }
+    next();
+  },
   passport.authenticate('google', { 
     scope: ['profile', 'email'] 
   })
@@ -10,6 +16,12 @@ router.get('/google',
 
 // Route de callback Google OAuth
 router.get('/google/callback',
+  (req, res, next) => {
+    if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET || !process.env.GOOGLE_CALLBACK_URL) {
+      return res.redirect('/admin-auth.html?error=google_oauth_not_configured');
+    }
+    next();
+  },
   passport.authenticate('google', { 
     failureRedirect: '/admin-auth.html?error=google_auth_failed',
     session: false

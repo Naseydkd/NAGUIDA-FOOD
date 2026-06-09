@@ -111,7 +111,7 @@ router.post('/forgot-password', async (req, res) => {
     );
 
     const baseUrl = process.env.NODE_ENV === 'production'
-      ? `https://${process.env.RENDER_EXTERNAL_HOSTNAME || 'votre-site.com'}`
+      ? (process.env.PUBLIC_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : `https://${process.env.RENDER_EXTERNAL_HOSTNAME || 'votre-site.com'}`))
       : 'http://localhost:3000';
 
     const resetLink = `${baseUrl}/admin-auth.html?token=${token}&action=reset`;

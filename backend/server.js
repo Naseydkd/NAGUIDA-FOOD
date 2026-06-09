@@ -6,10 +6,16 @@ const session = require('express-session');
 const passport = require('./config/passport');
 
 const app = express();
+
+const allowedOrigins = [
+  process.env.PUBLIC_URL,
+  process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null,
+  process.env.RENDER_EXTERNAL_HOSTNAME ? `https://${process.env.RENDER_EXTERNAL_HOSTNAME}` : null,
+  'http://localhost:3000'
+].filter(Boolean);
+
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? [`https://${process.env.RENDER_EXTERNAL_HOSTNAME}`, 'http://localhost:3000']
-    : 'http://localhost:3000',
+  origin: process.env.NODE_ENV === 'production' ? allowedOrigins : 'http://localhost:3000',
   credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
@@ -40,5 +46,9 @@ app.use('/api/reviews',     require('./routes/reviews'));
 app.use('/api/settings',    require('./routes/settings'));
 app.use('/api/categories',  require('./routes/categories'));
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+if (require.main === module) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
+
+module.exports = app;
