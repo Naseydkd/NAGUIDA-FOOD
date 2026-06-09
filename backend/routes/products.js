@@ -1,13 +1,24 @@
 const router = require('express').Router();
 const db = require('../db');
 
-// GET all products
+// GET all products (for ADMIN - includes products with stock = 0)
+router.get('/all', async (req, res) => {
+  const { category } = req.query;
+  try {
+    const { rows } = category
+      ? await db.query('SELECT * FROM products WHERE category = $1 ORDER BY display_order, id', [category])
+      : await db.query('SELECT * FROM products ORDER BY display_order, id');
+    res.json(rows);
+  } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// GET products with stock > 0 (for CLIENT APP - hides out of stock items)
 router.get('/', async (req, res) => {
   const { category } = req.query;
   try {
     const { rows } = category
-      ? await db.query('SELECT * FROM products WHERE category = $1', [category])
-      : await db.query('SELECT * FROM products');
+      ? await db.query('SELECT * FROM products WHERE category = $1 AND stock > 0 AND available = true ORDER BY display_order, id', [category])
+      : await db.query('SELECT * FROM products WHERE stock > 0 AND available = true ORDER BY display_order, id');
     res.json(rows);
   } catch (e) { res.status(500).json({ error: e.message }); }
 });

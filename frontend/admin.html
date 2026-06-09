@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Chez Hadjo</title>
+    <title>Admin - NAGUIDA FOOD</title>
     <link rel="stylesheet" href="css/admin.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 </head>
@@ -16,7 +16,10 @@
     <!-- Sidebar Navigation -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h2>👩🏾‍🍳 Admin</h2>
+            <div class="admin-brand">
+                <img src="images/logo-naguida-light.png" alt="NAGUIDA FOOD Logo" class="sidebar-logo">
+                <h2>NAGUIDA Admin</h2>
+            </div>
             <button class="close-sidebar" id="close-sidebar">✕</button>
         </div>
         <nav class="sidebar-nav">
@@ -185,7 +188,7 @@
         <section id="stock" class="content-section">
             <div class="section-header">
                 <h2>Gestion du Stock</h2>
-                <button id="btn-refresh-stock" class="btn-primary">🔄 Actualiser</button>
+                <button id="btn-refresh-stock" class="btn-primary">Actualiser</button>
             </div>
             <div id="stock-table" class="table-container">
                 <!-- Rempli via JavaScript -->
@@ -218,7 +221,7 @@
                         <h3>🔔 Notifications</h3>
                         <div class="form-group">
                             <label>Email pour notifications</label>
-                            <input type="email" id="notify-email" placeholder="admin@chez-hadjo.com">
+                            <input type="email" id="notify-email" placeholder="admin@naguidafood.com">
                         </div>
                         <div class="form-group">
                             <label>
@@ -273,10 +276,10 @@
                 <div class="form-group">
                     <label>Catégorie</label>
                     <select id="product-category" required>
-                        <option value="classique">Classique</option>
-                        <option value="gourmand">Gourmand</option>
-                        <option value="sain">Sain</option>
-                        <option value="special">Spécial</option>
+                        <option value="entrees">🥗 Entrées</option>
+                        <option value="plats">🍲 Plats</option>
+                        <option value="desserts">🍰 Desserts</option>
+                        <option value="boissons">🥤 Boissons</option>
                     </select>
                 </div>
                 <div class="form-group">

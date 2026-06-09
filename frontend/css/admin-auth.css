@@ -5,22 +5,23 @@
 :root {
     --primary-color: #ffffff;
     --secondary-color: #f8f9fa;
-    --accent-color: #e91e63; /* Rose fuchsia */
-    --accent-light: #f06292;
-    --accent-dark: #c2185b;
+    --accent-color: #980d00; /* Orange africain */
+    --accent-light: #980d00;
+    --accent-dark: #5d0800;
+    --accent-green: #2e7d32; /* Vert */
+    --accent-brown: #8d6e63; /* Marron terracotta */
+    --accent-gold: #d4af37; /* Doré */
+    --accent-teal: #00695c; /* Bleu pétrole */
     --text-color: #333333;
     --text-light: #666666;
-    --light-gray: #fce4ec; /* Rose très clair */
-    --border-color: #e91e63; /* Rose fuchsia */
-    --success-color: #4caf50;
+    --light-gray: #fff3e0; /* Orange très clair */
+    --border-color: #980d00; /* Orange */
+    --success-color: #2e7d32; /* Vert africain */
     --danger-color: #f44336;
-    --shadow: 0 4px 20px rgba(233, 30, 99, 0.15);
-    --shadow-lg: 0 20px 60px rgba(233, 30, 99, 0.25);
-    --shadow-xl: 0 30px 80px rgba(233, 30, 99, 0.3);
-    --gradient-primary: linear-gradient(135deg, #e91e63, #f06292, #9c27b0);
-    --gradient-secondary: linear-gradient(135deg, #f8bbd9, #fce4ec, #ffffff);
-    --gradient-bg: linear-gradient(135deg, #e91e63 0%, #f06292 25%, #9c27b0 50%, #673ab7 75%, #3f51b5 100%);
-    --purple-accent: #9c27b0;
+    --shadow: 0 4px 20px rgba(255, 111, 0, 0.15);
+    --shadow-lg: 0 20px 60px rgba(255, 111, 0, 0.25);
+    --shadow-xl: 0 30px 80px rgba(255, 111, 0, 0.3);
+    --purple-accent: #00695c;
     --glass-bg: rgba(255, 255, 255, 0.1);
     --glass-border: rgba(255, 255, 255, 0.2);
 }
@@ -37,9 +38,7 @@ html {
 
 body {
     font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: var(--gradient-bg);
-    background-size: 400% 400%;
-    animation: gradientShift 15s ease infinite;
+    background: var(--secondary-color);
     min-height: 100vh;
     display: flex;
     align-items: center;
@@ -47,13 +46,6 @@ body {
     color: var(--text-color);
     position: relative;
     overflow-x: hidden;
-}
-
-/* Animation du dégradé de fond */
-@keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
 }
 
 /* Particules flottantes en arrière-plan */
@@ -64,10 +56,7 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: 
-        radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+    background-color: rgba(255, 255, 255, 0.05);
     animation: float 20s ease-in-out infinite;
     pointer-events: none;
     z-index: 0;
@@ -118,7 +107,7 @@ body::before {
     left: 0;
     right: 0;
     height: 4px;
-    background: var(--gradient-primary);
+    background: var(--accent-color);
     border-radius: 24px 24px 0 0;
 }
 
@@ -129,7 +118,7 @@ body::before {
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    background: rgba(255, 255, 255, 0.05);
     animation: shimmer 8s ease-in-out infinite;
     pointer-events: none;
 }
@@ -141,7 +130,7 @@ body::before {
 
 .auth-box:hover {
     transform: translateY(-10px);
-    box-shadow: 0 40px 100px rgba(233, 30, 99, 0.4);
+    box-shadow: 0 40px 100px rgba(255, 111, 0, 0.4);
     border-color: rgba(255, 255, 255, 0.3);
 }
 
@@ -149,8 +138,23 @@ body::before {
     text-align: center;
     margin-bottom: 40px;
     padding-bottom: 30px;
-    border-bottom: 2px solid rgba(233, 30, 99, 0.2);
+    border-bottom: 2px solid rgba(255, 111, 0, 0.2);
     position: relative;
+}
+
+.auth-logo {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    margin: 0 auto 20px;
+    display: block;
+    filter: drop-shadow(0 4px 8px rgba(255, 111, 0, 0.3));
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
 }
 
 .auth-header::after {
@@ -161,29 +165,22 @@ body::before {
     transform: translateX(-50%);
     width: 60px;
     height: 4px;
-    background: var(--gradient-primary);
+    background: var(--accent-color);
     border-radius: 2px;
 }
 
 .auth-header h1 {
     font-size: 36px;
     font-weight: 800;
-    background: var(--gradient-primary);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--accent-color);
     margin-bottom: 10px;
     letter-spacing: -0.5px;
     position: relative;
 }
 
 .auth-header h1::before {
-    content: '👑';
-    position: absolute;
-    top: -10px;
-    right: -40px;
-    font-size: 24px;
-    animation: bounce 2s ease-in-out infinite;
+    content: '';
+    display: none;
 }
 
 @keyframes bounce {
@@ -193,7 +190,7 @@ body::before {
 
 .auth-header p {
     font-size: 16px;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(103, 103, 103, 0.8);
     font-weight: 500;
 }
 
@@ -224,7 +221,7 @@ body::before {
 }
 
 .auth-form h2 {
-    background: var(--gradient-primary);
+    background: var(--accent-color);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -243,7 +240,7 @@ body::before {
     transform: translateX(-50%);
     width: 40px;
     height: 3px;
-    background: var(--gradient-primary);
+    background: var(--accent-color);
     border-radius: 2px;
 }
 
@@ -252,11 +249,60 @@ body::before {
     position: relative;
 }
 
+.password-group {
+    position: relative;
+}
+
+.password-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-wrapper input {
+    flex: 1;
+    padding-right: 55px !important;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+    z-index: 10;
+    border-radius: 50%;
+}
+
+.toggle-password:hover {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.1);
+    background: rgba(255, 111, 0, 0.1);
+}
+
+.toggle-password .eye-icon {
+    filter: grayscale(1);
+    transition: filter 0.3s;
+}
+
+.toggle-password:hover .eye-icon {
+    filter: grayscale(0);
+}
+
 .form-group label {
     display: block;
     font-weight: 600;
     margin-bottom: 12px;
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(127, 0, 0, 0.9);
     font-size: 15px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -278,12 +324,12 @@ body::before {
 .form-group input {
     width: 100%;
     padding: 18px 24px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(236, 236, 236, 0.1);
     backdrop-filter: blur(10px);
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(72, 0, 0, 0.582);
     border-radius: 16px;
     font-size: 16px;
-    color: white;
+    color: #000000;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     font-family: inherit;
     font-weight: 500;
@@ -291,7 +337,7 @@ body::before {
 }
 
 .form-group input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(0, 0, 0, 0.644);
     font-weight: 400;
 }
 
@@ -300,8 +346,8 @@ body::before {
     border-color: var(--accent-color);
     background: rgba(255, 255, 255, 0.15);
     box-shadow: 
-        0 0 0 4px rgba(233, 30, 99, 0.2),
-        0 8px 32px rgba(233, 30, 99, 0.3);
+        0 0 0 4px rgba(255, 111, 0, 0.2),
+        0 8px 32px rgba(255, 111, 0, 0.3);
     transform: translateY(-2px);
 }
 
@@ -315,7 +361,7 @@ body::before {
     left: 0;
     right: 0;
     height: 2px;
-    background: var(--gradient-primary);
+    background: var(--accent-color);
     border-radius: 1px;
     transform: scaleX(0);
     transition: transform 0.3s ease;
@@ -328,7 +374,7 @@ body::before {
 .btn-primary {
     width: 100%;
     padding: 18px 32px;
-    background: var(--gradient-primary);
+    background: var(--accent-color);
     color: white;
     border: none;
     border-radius: 16px;
@@ -341,7 +387,7 @@ body::before {
     overflow: hidden;
     text-transform: uppercase;
     letter-spacing: 1px;
-    box-shadow: 0 8px 32px rgba(233, 30, 99, 0.4);
+    box-shadow: 0 8px 32px rgba(255, 111, 0, 0.4);
 }
 
 .btn-primary::before {
@@ -351,7 +397,7 @@ body::before {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    background: var(--accent-color), transparent);
     transition: left 0.6s;
 }
 
@@ -361,8 +407,8 @@ body::before {
 
 .btn-primary:hover {
     transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 16px 48px rgba(233, 30, 99, 0.6);
-    background: linear-gradient(135deg, #f06292, #e91e63, #c2185b);
+    box-shadow: 0 16px 48px rgba(255, 111, 0, 0.6);
+    background: var(--accent-dark);
 }
 
 .btn-primary:active {
@@ -409,13 +455,13 @@ body::before {
     transform: translateX(-50%);
     width: 60px;
     height: 2px;
-    background: var(--gradient-primary);
+    background: var(--accent-color);
     border-radius: 1px;
 }
 
 .form-footer p {
     font-size: 15px;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(0, 0, 0, 0.7);
     font-weight: 500;
 }
 
@@ -437,7 +483,7 @@ body::before {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(233, 30, 99, 0.1);
+    background: rgba(255, 111, 0, 0.1);
     border-radius: 8px;
     transform: scale(0);
     transition: transform 0.3s;
@@ -449,7 +495,7 @@ body::before {
 
 .form-footer a:hover {
     color: white;
-    text-shadow: 0 0 10px rgba(233, 30, 99, 0.5);
+    text-shadow: 0 0 10px rgba(255, 111, 0, 0.5);
 }
 
 /* ===========================
@@ -486,7 +532,7 @@ body::before {
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    background: var(--accent-color), transparent);
     transition: left 0.8s;
 }
 
@@ -563,7 +609,7 @@ body::before {
     left: 0;
     right: 0;
     height: 3px;
-    background: var(--gradient-primary);
+    background: var(--accent-color);
     border-radius: 20px 20px 0 0;
 }
 
@@ -574,7 +620,7 @@ body::before {
     right: -50%;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    background: rgba(255, 255, 255, 0.05);
     animation: pulse 4s ease-in-out infinite;
     pointer-events: none;
 }
@@ -587,7 +633,7 @@ body::before {
 .info-box:hover {
     background: rgba(255, 255, 255, 0.15);
     transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 20px 60px rgba(233, 30, 99, 0.3);
+    box-shadow: 0 20px 60px rgba(255, 111, 0, 0.3);
     border-color: rgba(255, 255, 255, 0.3);
 }
 
@@ -595,7 +641,7 @@ body::before {
     font-size: 22px;
     font-weight: 700;
     margin-bottom: 15px;
-    background: var(--gradient-primary);
+    background: var(--accent-color);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -736,6 +782,12 @@ body::before {
         padding-bottom: 20px;
     }
 
+    .auth-logo {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 15px;
+    }
+
     .auth-header h1 {
         font-size: 24px;
     }
@@ -834,9 +886,9 @@ body::before {
 }
 
 @keyframes focusPulse {
-    0% { box-shadow: 0 0 0 0 rgba(233, 30, 99, 0.4); }
-    70% { box-shadow: 0 0 0 10px rgba(233, 30, 99, 0); }
-    100% { box-shadow: 0 0 0 0 rgba(233, 30, 99, 0); }
+    0% { box-shadow: 0 0 0 0 rgba(255, 111, 0, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(255, 111, 0, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(255, 111, 0, 0); }
 }
 
 /* Effet de survol pour les liens */
@@ -852,7 +904,7 @@ body::before {
     left: 0;
     width: 0;
     height: 2px;
-    background: var(--gradient-primary);
+    background: var(--accent-color);
     transition: width 0.3s ease;
 }
 
@@ -868,8 +920,8 @@ body::before {
     border-color: var(--accent-color);
     background: rgba(255, 255, 255, 0.2);
     box-shadow: 
-        0 0 0 4px rgba(233, 30, 99, 0.2),
-        0 8px 32px rgba(233, 30, 99, 0.3);
+        0 0 0 4px rgba(255, 111, 0, 0.2),
+        0 8px 32px rgba(255, 111, 0, 0.3);
     transform: translateY(-2px);
 }
 
@@ -935,4 +987,128 @@ body::before {
 
 .form-group input:focus::placeholder {
     animation: typing 2s steps(20, end);
+}
+
+/* ===========================
+   BOUTON GOOGLE OAUTH & SÉPARATEUR
+   =========================== */
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 25px 0;
+    position: relative;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid rgba(255, 111, 0, 0.3);
+}
+
+.divider span {
+    padding: 0 15px;
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.btn-google {
+    width: 100%;
+    padding: 16px 32px;
+    background: white;
+    color: #444;
+    border: 2px solid #dadce0;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.btn-google svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.btn-google::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(66, 133, 244, 0.1);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn-google:hover {
+    background: #f8f9fa;
+    border-color: #4285f4;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(66, 133, 244, 0.3);
+}
+
+.btn-google:hover::before {
+    width: 400px;
+    height: 400px;
+}
+
+.btn-google:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* Animation de loading pour le bouton Google */
+.btn-google.loading {
+    pointer-events: none;
+    color: transparent;
+}
+
+.btn-google.loading svg {
+    opacity: 0;
+}
+
+.btn-google.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(66, 133, 244, 0.3);
+    border-top: 2px solid #4285f4;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+/* Responsive pour le bouton Google */
+@media (max-width: 480px) {
+    .btn-google {
+        padding: 14px 24px;
+        font-size: 15px;
+        border-radius: 12px;
+    }
+
+    .btn-google svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .divider span {
+        font-size: 13px;
+    }
 }

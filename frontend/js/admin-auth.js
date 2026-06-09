@@ -9,8 +9,114 @@ const API_BASE_URL = window.location.hostname === 'localhost' || window.location
 
 document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
+    setupPasswordToggles();
+    setupGoogleAuth();
     checkIfAlreadyLoggedIn();
+    checkGoogleAuthCallback();
 });
+
+// ===========================
+// TOGGLE VISIBILITÉ MOT DE PASSE
+// ===========================
+
+function setupPasswordToggles() {
+    // Sélectionner tous les boutons toggle
+    const toggleButtons = document.querySelectorAll('.toggle-password');
+    
+    toggleButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Récupérer l'input cible
+            const targetId = this.getAttribute('data-target');
+            const input = document.getElementById(targetId);
+            const icon = this.querySelector('.eye-icon');
+            
+            // Toggle le type d'input
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.textContent = '🙈'; // Yeux fermés
+                this.setAttribute('title', 'Masquer le mot de passe');
+            } else {
+                input.type = 'password';
+                icon.textContent = '👁️'; // Yeux ouverts
+                this.setAttribute('title', 'Afficher le mot de passe');
+            }
+        });
+    });
+}
+
+// ===========================
+// GOOGLE OAUTH
+// ===========================
+
+function setupGoogleAuth() {
+    // Boutons Google Login et Signup
+    const btnGoogleLogin = document.getElementById('btn-google-login');
+    const btnGoogleSignup = document.getElementById('btn-google-signup');
+    
+    if (btnGoogleLogin) {
+        btnGoogleLogin.addEventListener('click', handleGoogleAuth);
+    }
+    
+    if (btnGoogleSignup) {
+        btnGoogleSignup.addEventListener('click', handleGoogleAuth);
+    }
+}
+
+function handleGoogleAuth(e) {
+    e.preventDefault();
+    
+    // Ajouter une classe de loading
+    this.classList.add('loading');
+    
+    // Rediriger vers l'authentification Google
+    const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:3000'
+        : window.location.origin;
+    
+    window.location.href = `${baseUrl}/api/auth/google`;
+}
+
+function checkGoogleAuthCallback() {
+    // Vérifier si on revient d'une authentification Google
+    const params = new URLSearchParams(window.location.search);
+    
+    if (params.get('google_auth') === 'success') {
+        try {
+            const userJson = params.get('user');
+            if (userJson) {
+                const user = JSON.parse(decodeURIComponent(userJson));
+                
+                // Sauvegarder l'utilisateur
+                if (user.is_admin) {
+                    localStorage.setItem('currentAdmin', JSON.stringify(user));
+                    showMessage('Connexion Google réussie ! Redirection...', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'admin.html';
+                    }, 1000);
+                } else {
+                    // Utilisateur normal
+                    localStorage.setItem('currentUser', JSON.stringify(user));
+                    showMessage('Connexion Google réussie !', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1000);
+                }
+            }
+        } catch (error) {
+            console.error('Erreur parsing user Google:', error);
+            showMessage('Erreur lors de la connexion Google', 'error');
+        }
+    } else if (params.get('error') === 'google_auth_failed') {
+        showMessage('Erreur lors de l\'authentification Google. Veuillez réessayer.', 'error');
+        
+        // Nettoyer l'URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+}
 
 // ===========================
 // VÉRIFICATION CONNEXION
@@ -31,23 +137,45 @@ function setupEventListeners() {
     // Toggle entre login et signup
     document.getElementById('btn-toggle-signup').addEventListener('click', (e) => {
         e.preventDefault();
-        toggleForms();
+        showForm('form-signup');
     });
 
     document.getElementById('btn-toggle-login').addEventListener('click', (e) => {
         e.preventDefault();
-        toggleForms();
+        showForm('form-login');
+    });
+
+    document.getElementById('btn-forgot-password').addEventListener('click', (e) => {
+        e.preventDefault();
+        showForm('form-forgot');
+    });
+
+    document.getElementById('btn-back-login').addEventListener('click', (e) => {
+        e.preventDefault();
+        showForm('form-login');
     });
 
     // Formulaires
     document.getElementById('form-login').addEventListener('submit', handleLogin);
     document.getElementById('form-signup').addEventListener('submit', handleSignup);
+    document.getElementById('form-forgot').addEventListener('submit', handleForgotPassword);
+    document.getElementById('form-reset').addEventListener('submit', handleResetPassword);
+
+    // Vérifier si on arrive avec un token de reset
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('action') === 'reset' && params.get('token')) {
+        showForm('form-reset');
+    }
+}
+
+function showForm(formId) {
+    document.querySelectorAll('.auth-form').forEach(f => f.classList.remove('active'));
+    document.getElementById(formId).classList.add('active');
+    clearMessages();
 }
 
 function toggleForms() {
-    document.getElementById('form-login').classList.toggle('active');
-    document.getElementById('form-signup').classList.toggle('active');
-    clearMessages();
+    showForm(document.getElementById('form-login').classList.contains('active') ? 'form-signup' : 'form-login');
 }
 
 // ===========================
@@ -151,6 +279,74 @@ async function handleSignup(e) {
     } catch (error) {
         console.error('Erreur:', error);
         showMessage('Erreur lors de l\'inscription. Veuillez réessayer.', 'error');
+    }
+}
+
+// ===========================
+// MOT DE PASSE OUBLIÉ
+// ===========================
+
+async function handleForgotPassword(e) {
+    e.preventDefault();
+    const email = document.getElementById('forgot-email').value;
+    showMessage('Envoi en cours...', 'info');
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/users/forgot-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            showMessage(data.error || 'Erreur lors de l\'envoi', 'error');
+            return;
+        }
+        showMessage('Si cet email existe, un lien de réinitialisation a été envoyé.', 'success');
+    } catch (error) {
+        showMessage('Erreur de connexion. Veuillez réessayer.', 'error');
+    }
+}
+
+// ===========================
+// RÉINITIALISATION MOT DE PASSE
+// ===========================
+
+async function handleResetPassword(e) {
+    e.preventDefault();
+    const password = document.getElementById('reset-password').value;
+    const passwordConfirm = document.getElementById('reset-password-confirm').value;
+
+    if (password !== passwordConfirm) {
+        showMessage('Les mots de passe ne correspondent pas', 'error');
+        return;
+    }
+
+    const token = new URLSearchParams(window.location.search).get('token');
+    if (!token) {
+        showMessage('Token invalide', 'error');
+        return;
+    }
+
+    showMessage('Réinitialisation en cours...', 'info');
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/users/reset-password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token, password })
+        });
+        const data = await response.json();
+        if (!response.ok) {
+            showMessage(data.error || 'Erreur lors de la réinitialisation', 'error');
+            return;
+        }
+        showMessage('Mot de passe réinitialisé avec succès ! Redirection...', 'success');
+        setTimeout(() => {
+            window.location.href = 'admin-auth.html';
+        }, 2000);
+    } catch (error) {
+        showMessage('Erreur de connexion. Veuillez réessayer.', 'error');
     }
 }
 

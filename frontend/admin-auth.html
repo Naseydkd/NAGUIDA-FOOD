@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - Chez Hadjo</title>
+    <title>Admin Login - NAGUIDA FOOD</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -13,7 +13,8 @@
     <div class="auth-container">
         <div class="auth-box">
             <div class="auth-header">
-                <h1>🌸 Chez Hadjo</h1>
+                <img src="images/logo-naguida-light.png" alt="NAGUIDA FOOD Logo" class="auth-logo">
+                <h1>NAGUIDA FOOD</h1>
                 <p>Espace Administrateur</p>
             </div>
 
@@ -23,21 +24,87 @@
                 
                 <div class="form-group">
                     <label for="login-email">Email</label>
-                    <input type="email" id="login-email" placeholder="admin@chedhadjo.com" required>
+                    <input type="email" id="login-email" placeholder="admin@naguidafood.com" required>
                     <div class="input-highlight"></div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group password-group">
                     <label for="login-password">Mot de passe</label>
-                    <input type="password" id="login-password" placeholder="Votre mot de passe" required>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="login-password" placeholder="Votre mot de passe" required>
+                        <button type="button" class="toggle-password" data-target="login-password">
+                            <span class="eye-icon">👁️</span>
+                        </button>
+                    </div>
                     <div class="input-highlight"></div>
                 </div>
 
                 <button type="submit" class="btn-primary">Se connecter</button>
 
+                <div class="divider">
+                    <span>OU</span>
+                </div>
+
+                <button type="button" class="btn-google" id="btn-google-login">
+                    <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                        <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+                        <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+                        <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+                        <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+                    </svg>
+                    Se connecter avec Google
+                </button>
+
                 <div class="form-footer">
+                    <p><a href="#" id="btn-forgot-password">Mot de passe oublié ?</a></p>
                     <p>Pas encore de compte ? <a href="#" id="btn-toggle-signup">S'inscrire</a></p>
                 </div>
+            </form>
+
+            <!-- Formulaire Mot de passe oublié -->
+            <form id="form-forgot" class="auth-form">
+                <h2>Mot de passe oublié</h2>
+
+                <div class="form-group">
+                    <label for="forgot-email">Email</label>
+                    <input type="email" id="forgot-email" placeholder="Votre adresse email" required>
+                    <div class="input-highlight"></div>
+                </div>
+
+                <button type="submit" class="btn-primary">Envoyer le lien</button>
+
+                <div class="form-footer">
+                    <p><a href="#" id="btn-back-login">← Retour à la connexion</a></p>
+                </div>
+            </form>
+
+            <!-- Formulaire Réinitialisation mot de passe -->
+            <form id="form-reset" class="auth-form">
+                <h2>Nouveau mot de passe</h2>
+
+                <div class="form-group password-group">
+                    <label for="reset-password">Nouveau mot de passe</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="reset-password" placeholder="Minimum 8 caractères" minlength="8" required>
+                        <button type="button" class="toggle-password" data-target="reset-password">
+                            <span class="eye-icon">👁️</span>
+                        </button>
+                    </div>
+                    <div class="input-highlight"></div>
+                </div>
+
+                <div class="form-group password-group">
+                    <label for="reset-password-confirm">Confirmer le mot de passe</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="reset-password-confirm" placeholder="Confirmer votre mot de passe" required>
+                        <button type="button" class="toggle-password" data-target="reset-password-confirm">
+                            <span class="eye-icon">👁️</span>
+                        </button>
+                    </div>
+                    <div class="input-highlight"></div>
+                </div>
+
+                <button type="submit" class="btn-primary">Réinitialiser</button>
             </form>
 
             <!-- Formulaire Inscription -->
@@ -56,19 +123,43 @@
                     <div class="input-highlight"></div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group password-group">
                     <label for="signup-password">Mot de passe</label>
-                    <input type="password" id="signup-password" placeholder="Minimum 8 caractères" minlength="8" required>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="signup-password" placeholder="Minimum 8 caractères" minlength="8" required>
+                        <button type="button" class="toggle-password" data-target="signup-password">
+                            <span class="eye-icon">👁️</span>
+                        </button>
+                    </div>
                     <div class="input-highlight"></div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group password-group">
                     <label for="signup-password-confirm">Confirmer le mot de passe</label>
-                    <input type="password" id="signup-password-confirm" placeholder="Confirmer votre mot de passe" required>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="signup-password-confirm" placeholder="Confirmer votre mot de passe" required>
+                        <button type="button" class="toggle-password" data-target="signup-password-confirm">
+                            <span class="eye-icon">👁️</span>
+                        </button>
+                    </div>
                     <div class="input-highlight"></div>
                 </div>
 
                 <button type="submit" class="btn-primary">S'inscrire</button>
+
+                <div class="divider">
+                    <span>OU</span>
+                </div>
+
+                <button type="button" class="btn-google" id="btn-google-signup">
+                    <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                        <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+                        <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+                        <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+                        <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+                    </svg>
+                    S'inscrire avec Google
+                </button>
 
                 <div class="form-footer">
                     <p>Vous avez déjà un compte ? <a href="#" id="btn-toggle-login">Se connecter</a></p>
@@ -77,24 +168,6 @@
 
             <!-- Message de statut -->
             <div id="status-message" class="status-message"></div>
-        </div>
-
-        <!-- Illustration/Info -->
-        <div class="auth-info">
-            <div class="info-box">
-                <h3>Sécurité Avancée</h3>
-                <p>Votre espace administrateur est protégé par des mesures de sécurité de niveau entreprise pour garantir la confidentialité de vos données.</p>
-            </div>
-            
-            <div class="info-box">
-                <h3>Interface Moderne</h3>
-                <p>Profitez d'une interface utilisateur moderne et intuitive, conçue pour optimiser votre productivité et simplifier la gestion de votre boutique.</p>
-            </div>
-            
-            <div class="info-box">
-                <h3>Design Responsive</h3>
-                <p>Accédez à votre tableau de bord depuis n'importe quel appareil. Notre design s'adapte parfaitement aux écrans mobiles, tablettes et ordinateurs.</p>
-            </div>
         </div>
     </div>
 

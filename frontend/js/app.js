@@ -37,6 +37,179 @@ document.addEventListener('DOMContentLoaded', () => {
 // RÉCUPÉRATION DES DONNÉES
 // ===========================
 
+// Toggle Password Visibility - FONCTION GLOBALE
+window.togglePasswordVisibility = function(inputId, button) {
+    const input = document.getElementById(inputId);
+    const icon = button.querySelector('.eye-icon');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.textContent = '🙈'; // Yeux fermés
+        button.setAttribute('title', 'Masquer le mot de passe');
+    } else {
+        input.type = 'password';
+        icon.textContent = '👁️'; // Yeux ouverts
+        button.setAttribute('title', 'Afficher le mot de passe');
+    }
+}
+
+// Geolocation - FONCTION GLOBALE
+window.getLocation = function() {
+    const button = document.getElementById('btn-get-location');
+    const locationText = button.querySelector('.location-text');
+    const locationIcon = button.querySelector('.location-icon');
+    
+    if (!navigator.geolocation) {
+        showNotification('❌ La géolocalisation n\'est pas supportée par votre navigateur', 'error');
+        return;
+    }
+    
+    // État "chargement"
+    button.classList.add('loading');
+    button.disabled = true;
+    locationText.textContent = 'Recherche de votre position...';
+    locationIcon.textContent = '🔄';
+    
+    navigator.geolocation.getCurrentPosition(
+        // Succès
+        (position) => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            
+            // Stocker dans les champs cachés
+            document.getElementById('signup-latitude').value = latitude;
+            document.getElementById('signup-longitude').value = longitude;
+            
+            // État "succès"
+            button.classList.remove('loading');
+            button.classList.add('success');
+            locationText.textContent = 'Position enregistrée ✓';
+            locationIcon.textContent = '✅';
+            
+            showNotification(`📍 Position enregistrée: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`, 'success');
+            
+            // Réactiver le bouton après 2 secondes
+            setTimeout(() => {
+                button.disabled = false;
+                button.classList.remove('success');
+                locationText.textContent = 'Mettre à jour ma position';
+                locationIcon.textContent = '📍';
+            }, 2000);
+        },
+        // Erreur
+        (error) => {
+            button.classList.remove('loading');
+            button.disabled = false;
+            locationText.textContent = 'Utiliser ma position';
+            locationIcon.textContent = '📍';
+            
+            let errorMessage = 'Erreur lors de la récupération de la position';
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage = 'Vous avez refusé l\'accès à la position';
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage = 'Position non disponible';
+                    break;
+                case error.TIMEOUT:
+                    errorMessage = 'Délai d\'attente dépassé';
+                    break;
+            }
+            showNotification('❌ ' + errorMessage, 'error');
+        },
+        // Options
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+        }
+    );
+}
+
+// Geolocation pour le CHECKOUT - FONCTION GLOBALE
+window.getLocationCheckout = function() {
+    const button = document.getElementById('btn-get-location-checkout');
+    const locationText = button.querySelector('.location-text');
+    const locationIcon = button.querySelector('.location-icon');
+    
+    if (!navigator.geolocation) {
+        showNotification('❌ La géolocalisation n\'est pas supportée par votre navigateur', 'error');
+        return;
+    }
+    
+    // État "chargement"
+    button.classList.add('loading');
+    button.disabled = true;
+    locationText.textContent = 'Localisation en cours...';
+    locationIcon.textContent = '🔄';
+    
+    navigator.geolocation.getCurrentPosition(
+        // Succès
+        (position) => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            
+            // Stocker dans les champs cachés
+            document.getElementById('checkout-latitude').value = latitude;
+            document.getElementById('checkout-longitude').value = longitude;
+            
+            // État "succès"
+            button.classList.remove('loading');
+            button.classList.add('success');
+            locationText.textContent = 'Position enregistrée ✓';
+            locationIcon.textContent = '✅';
+            
+            showNotification(`📍 Position de livraison enregistrée !`, 'success');
+            
+            // Réactiver le bouton après 2 secondes
+            setTimeout(() => {
+                button.disabled = false;
+                button.classList.remove('success');
+                locationText.textContent = 'Mettre à jour ma position';
+                locationIcon.textContent = '📍';
+            }, 2000);
+        },
+        // Erreur
+        (error) => {
+            button.classList.remove('loading');
+            button.disabled = false;
+            locationText.textContent = 'Utiliser ma position actuelle';
+            locationIcon.textContent = '📍';
+            
+            let errorMessage = 'Erreur lors de la récupération de la position';
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    errorMessage = 'Vous avez refusé l\'accès à la position';
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    errorMessage = 'Position non disponible';
+                    break;
+                case error.TIMEOUT:
+                    errorMessage = 'Délai d\'attente dépassé';
+                    break;
+            }
+            showNotification('❌ ' + errorMessage, 'error');
+        },
+        // Options
+        {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+        }
+    );
+}
+
+// Modal functions - FONCTIONS GLOBALES
+window.openModal = function(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) modal.classList.add('show');
+}
+
+window.closeModal = function(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) modal.classList.remove('show');
+}
+
 async function loadProducts() {
     try {
         const response = await fetch(`${API_BASE_URL}/products/`);
@@ -128,10 +301,10 @@ function displayProducts(products) {
 
 function getCategoryDisplayName(category) {
     const categoryNames = {
-        'classique': 'Classique',
-        'gourmand': 'Gourmand',
-        'sain': 'Sain & Bio',
-        'special': 'Spécialité'
+        'entrees': '🥗 Entrées',
+        'plats': '🍲 Plats',
+        'desserts': '🍰 Desserts',
+        'boissons': '🥤 Boissons'
     };
     return categoryNames[category] || category;
 }
@@ -309,15 +482,8 @@ function filterProducts(category) {
 // GESTION DES MODALES
 // ===========================
 
-function openModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) modal.classList.add('show');
-}
-
-function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) modal.classList.remove('show');
-}
+// Déjà définies comme fonctions globales en haut du fichier
+// window.openModal et window.closeModal
 
 // ===========================
 // NOTIFICATIONS
@@ -404,6 +570,20 @@ function setupMainButtons() {
         });
         console.log('✅ Bouton connexion configuré');
     }
+    
+    // Boutons Google OAuth
+    const btnGoogleLoginClient = document.getElementById('btn-google-login-client');
+    const btnGoogleSignupClient = document.getElementById('btn-google-signup-client');
+    
+    if (btnGoogleLoginClient) {
+        btnGoogleLoginClient.addEventListener('click', handleGoogleAuth);
+        console.log('✅ Bouton Google Login configuré');
+    }
+    
+    if (btnGoogleSignupClient) {
+        btnGoogleSignupClient.addEventListener('click', handleGoogleAuth);
+        console.log('✅ Bouton Google Signup configuré');
+    }
 
     // Commander
     const btnCommander = document.getElementById('btn-commander');
@@ -422,6 +602,10 @@ function setupMainButtons() {
     if (btnContinueShopping) {
         btnContinueShopping.addEventListener('click', () => {
             closeModal('modal-panier');
+            // Si on est sur index.html, rediriger vers menu.html
+            if (window.location.pathname.includes('index.html') || window.location.pathname === '/' || window.location.pathname === '') {
+                window.location.href = 'menu.html';
+            }
         });
     }
 
@@ -753,7 +937,7 @@ function updateAuthUI() {
 // COMMANDE
 // ===========================
 
-async function submitOrder(address, city, phone, deliveryType, paymentMethod, notes) {
+async function submitOrder(address, city, phone, deliveryType, paymentMethod, notes, latitude, longitude) {
     if (!currentUser) {
         showNotification('Veuillez vous connecter d\'abord', 'error');
         openModal('modal-login');
@@ -782,7 +966,9 @@ async function submitOrder(address, city, phone, deliveryType, paymentMethod, no
                 phone,
                 delivery_type: deliveryType,
                 payment_method: paymentMethod,
-                notes
+                notes,
+                delivery_latitude: latitude || null,
+                delivery_longitude: longitude || null
             })
         });
 
@@ -812,8 +998,8 @@ function setupForms() {
     if (formLogin) {
         formLogin.addEventListener('submit', (e) => {
             e.preventDefault();
-            const email = e.target.querySelector('input[type="email"]').value;
-            const password = e.target.querySelector('input[type="password"]').value;
+            const email = document.getElementById('login-email')?.value;
+            const password = document.getElementById('login-password-client')?.value;
             login(email, password);
         });
         console.log('✅ Formulaire de connexion configuré');
@@ -823,11 +1009,14 @@ function setupForms() {
     if (formSignup) {
         formSignup.addEventListener('submit', (e) => {
             e.preventDefault();
-            const inputs = e.target.querySelectorAll('input');
-            const firstName = document.getElementById('signup-firstname')?.value || inputs[3]?.value;
-            const lastName = document.getElementById('signup-lastname')?.value || inputs[4]?.value;
-            const phone = document.getElementById('signup-phone')?.value || inputs[5]?.value;
-            signup(inputs[0].value, inputs[1].value, inputs[2].value, firstName, lastName, phone);
+            const email = document.getElementById('signup-email')?.value;
+            const username = document.getElementById('signup-username')?.value;
+            const password = document.getElementById('signup-password-client')?.value;
+            const firstName = document.getElementById('signup-firstname')?.value;
+            const lastName = document.getElementById('signup-lastname')?.value;
+            const phone = document.getElementById('signup-phone')?.value;
+            
+            signup(email, username, password, firstName, lastName, phone);
         });
         console.log('✅ Formulaire d\'inscription configuré');
     }
@@ -853,9 +1042,67 @@ function setupForms() {
             const deliveryType = document.querySelector('input[name="delivery_type"]:checked')?.value;
             const paymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value;
             const notes = document.getElementById('notes').value;
+            const latitude = document.getElementById('checkout-latitude')?.value;
+            const longitude = document.getElementById('checkout-longitude')?.value;
 
-            submitOrder(address, city, phone, deliveryType, paymentMethod, notes);
+            submitOrder(address, city, phone, deliveryType, paymentMethod, notes, latitude, longitude);
         });
         console.log('✅ Formulaire de commande configuré');
     }
 }
+
+// ===========================
+// GOOGLE OAUTH FUNCTIONS
+// ===========================
+
+function handleGoogleAuth(e) {
+    e.preventDefault();
+    
+    // Ajouter une classe de loading au bouton
+    const button = e.currentTarget;
+    button.classList.add('loading');
+    
+    // Rediriger vers l'authentification Google
+    const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+        ? 'http://localhost:3000'
+        : window.location.origin;
+    
+    window.location.href = `${baseUrl}/api/auth/google`;
+}
+
+// Vérifier si on revient d'une authentification Google
+function checkGoogleAuthCallback() {
+    const params = new URLSearchParams(window.location.search);
+    
+    if (params.get('google_auth') === 'success') {
+        try {
+            const userJson = params.get('user');
+            if (userJson) {
+                const user = JSON.parse(decodeURIComponent(userJson));
+                
+                // Sauvegarder l'utilisateur
+                currentUser = user;
+                localStorage.setItem('currentUser', JSON.stringify(user));
+                
+                showNotification('✅ Connexion Google réussie !', 'success');
+                updateAuthUI();
+                
+                // Nettoyer l'URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        } catch (error) {
+            console.error('Erreur parsing user Google:', error);
+            showNotification('Erreur lors de la connexion Google', 'error');
+        }
+    } else if (params.get('error') === 'google_auth_failed') {
+        showNotification('Erreur lors de l\'authentification Google. Veuillez réessayer.', 'error');
+        
+        // Nettoyer l'URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+}
+
+// Appeler la fonction au chargement de la page
+document.addEventListener('DOMContentLoaded', () => {
+    checkGoogleAuthCallback();
+});

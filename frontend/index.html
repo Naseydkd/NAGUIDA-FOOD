@@ -3,18 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Boule de neige  - Vente en Ligne</title>
+    <title>NAGUIDA FOOD - La bonne cuisine à votre porte</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
-            <div class="navbar-brand">
-                <span class="brand-icon">👩🏾‍🍳</span>
-                <span class="brand-text">Massa </span>    
-                <span class="brand-subtitle"></span>
-            </div>
+            <a href="index.html" class="navbar-brand">
+                <img src="images/logo-naguida-light.png" alt="NAGUIDA FOOD Logo" class="brand-logo">
+                <div class="brand-info">
+                    <span class="brand-text">NAGUIDA FOOD</span>    
+                    <span class="brand-subtitle">La bonne cuisine à votre porte</span>
+                </div>
+            </a>
             
             <button class="hamburger" id="hamburger">
                 <span class="hamburger-line"></span>
@@ -24,13 +26,13 @@
             
             <div class="navbar-menu" id="navbar-menu">
                 <div class="nav-links">
-                    <a href="#accueil" class="nav-link">
+                    <a href="index.html" class="nav-link active">
                         <span class="nav-icon"></span>
                         <span class="nav-text">Accueil</span>
                     </a>
-                    <a href="#catalogue" class="nav-link">
+                    <a href="menu.html" class="nav-link">
                         <span class="nav-icon"></span>
-                        <span class="nav-text">Catalogue</span>
+                        <span class="nav-text">Menu</span>
                     </a>
                     <a href="#avis" class="nav-link">
                         <span class="nav-icon"></span>
@@ -56,81 +58,11 @@
     <!-- Hero Section -->
     <section id="accueil" class="hero">
         <div class="hero-content">
-            <h1>Bienvenue chez Hadjo BDN</h1>
-            <p>Les meilleurs BDN faits maison, livrés chez vous</p>
-            <button id="btn-commander" class="btn-primary">Commander maintenant</button>
+            <h1>Bienvenue chez NAGUIDA FOOD</h1>
+            <p>La bonne cuisine traditionnelle africaine, livrée chez vous</p>
+            <a href="menu.html" class="btn-primary">Découvrir notre menu</a>
         </div>
     </section>
-
-    <!-- Catalogue -->
-    <section id="catalogue" class="catalogue">
-        <div class="container">
-            <h2>Nos Produits</h2>
-            
-            <!-- Filtres simples -->
-            <div class="filtres">
-                <button class="filtre-btn active" data-category="all">Tous</button>
-                <button class="filtre-btn" data-category="classique">Classiques</button>
-                <button class="filtre-btn" data-category="gourmand">Gourmands</button>
-                <button class="filtre-btn" data-category="sain">Sains</button>
-                <button class="filtre-btn" data-category="special">Spéciaux</button>
-            </div>
-            
-            <div id="products-grid" class="products-grid">
-                <!-- Rempli via JavaScript -->
-            </div>
-        </div>
-    </section>
-
-    <!-- Modal Panier -->
-    <div id="modal-panier" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Mon Panier</h2>
-            <div id="cart-items" class="cart-items">
-                <!-- Rempli via JavaScript -->
-            </div>
-            <div class="cart-summary">
-                <h3>Total: <span id="cart-total"></span> FCFA</h3>
-            </div>
-            <div class="cart-actions">
-                <button class="btn-secondary" id="btn-continue-shopping">Continuer mes achats</button>
-                <button class="btn-primary" id="btn-checkout">Finaliser ma commande</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal Connexion -->
-    <div id="modal-login" class="modal">
-        <div class="modal-content modal-form">
-            <span class="close">&times;</span>
-            <h2>Connexion</h2>
-            <form id="form-login">
-                <input type="email" placeholder="Email" required>
-                <input type="password" placeholder="Mot de passe" required>
-                <button type="submit" class="btn-primary">Se connecter</button>
-            </form>
-            <p>Pas de compte ? <a href="#" id="btn-signup">S'inscrire</a></p>
-        </div>
-    </div>
-
-    <!-- Modal Inscription -->
-    <div id="modal-signup" class="modal">
-        <div class="modal-content modal-form">
-            <span class="close">&times;</span>
-            <h2>Inscription</h2>
-            <form id="form-signup">
-                <input type="email" placeholder="Email *" required>
-                <input type="text" placeholder="Nom d'utilisateur *" required>
-                <input type="password" placeholder="Mot de passe *" required>
-                <input type="text" id="signup-firstname" placeholder="Prénom *" required>
-                <input type="text" id="signup-lastname" placeholder="Nom (optionnel)">
-                <input type="tel" id="signup-phone" placeholder="Téléphone *" required>
-                <button type="submit" class="btn-primary">S'inscrire</button>
-                <p style="font-size:12px; color:#999; margin-top:8px;">* Champs obligatoires</p>
-            </form>
-        </div>
-    </div>
 
     <!-- Section Avis Clients -->
     <section id="avis" class="avis-section">
@@ -184,91 +116,102 @@
         </div>
     </section>
 
-    <!-- Modal pour ajouter un avis -->
-    <div id="modal-review" class="modal">
-        <div class="modal-content modal-form">
-            <span class="close">&times;</span>
-            <h2>✍️ Laisser un avis</h2>
-            <form id="form-review">
-                <div class="form-group">
-                    <label>Produit</label>
-                    <select id="review-product" required>
-                        <option value="">Sélectionnez un produit</option>
-                        <!-- Rempli via JavaScript -->
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Votre nom</label>
-                    <input type="text" id="review-name" placeholder="Votre nom" required>
-                </div>
-                <div class="form-group">
-                    <label>Note</label>
-                    <div class="rating-input">
-                        <input type="radio" name="rating" value="1" id="star1">
-                        <label for="star1">★</label>
-                        <input type="radio" name="rating" value="2" id="star2">
-                        <label for="star2">★</label>
-                        <input type="radio" name="rating" value="3" id="star3">
-                        <label for="star3">★</label>
-                        <input type="radio" name="rating" value="4" id="star4">
-                        <label for="star4">★</label>
-                        <input type="radio" name="rating" value="5" id="star5">
-                        <label for="star5">★</label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Votre avis</label>
-                    <textarea id="review-comment" placeholder="Partagez votre expérience..." rows="4" required></textarea>
-                </div>
-                <button type="submit" class="btn-primary">Publier l'avis</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal Checkout -->
-    <div id="modal-checkout" class="modal">
-        <div class="modal-content modal-form">
-            <span class="close">&times;</span>
-            <h2>Finaliser la commande</h2>
-            <form id="form-checkout">
-                <h3>Adresse de livraison</h3>
-                <input type="text" id="address" placeholder="Adresse" required>
-                <input type="text" id="city" placeholder="Ville" required>
-                <input type="tel" id="phone" placeholder="Numéro de téléphone" required>
-
-                <h3>Options de livraison</h3>
-                <label>
-                    <input type="radio" name="delivery_type" value="delivery" checked> Livraison à domicile
-                </label>
-                <label>
-                    <input type="radio" name="delivery_type" value="pickup"> Retrait en magasin
-                </label>
-
-                <h3>Paiement</h3>
-                <label>
-                    <input type="radio" name="payment_method" value="mynita" checked> MyNita
-                </label>
-                <label>
-                    <input type="radio" name="payment_method" value="cash"> Paiement à la livraison
-                </label>
-
-                <textarea id="notes" placeholder="Notes de commande (optionnel)" rows="3"></textarea>
-
-                <button type="submit" class="btn-primary">Confirmer la commande</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Modal Détails Produit -->
-    <div id="modal-product" class="modal">
+    <!-- Modals -->
+    <!-- Modal Connexion -->
+    <div id="modal-login" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <div id="product-details" class="product-details">
-                <!-- Rempli via JavaScript -->
+            <span class="close" onclick="closeModal('modal-login')">&times;</span>
+            <div class="modal-form">
+                <h2>Connexion</h2>
+                <form id="form-login">
+                    <div class="form-group">
+                        <input type="email" id="login-email" placeholder="Email" required>
+                    </div>
+                    <div class="form-group password-group">
+                        <div class="password-input-wrapper">
+                            <input type="password" id="login-password-client" placeholder="Mot de passe" required>
+                            <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('login-password-client', this)">
+                                <span class="eye-icon">👁️</span>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary">Se connecter</button>
+                    
+                    <div class="divider">
+                        <span>OU</span>
+                    </div>
+                    
+                    <button type="button" class="btn-google" id="btn-google-login-client">
+                        <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                            <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+                            <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+                            <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+                            <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+                        </svg>
+                        Se connecter avec Google
+                    </button>
+                    
+                    <p>Pas de compte ? <a href="#" id="btn-signup">S'inscrire</a></p>
+                </form>
             </div>
         </div>
     </div>
 
+    <!-- Modal Inscription -->
+    <div id="modal-signup" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('modal-signup')">&times;</span>
+            <div class="modal-form">
+                <h2>Inscription</h2>
+                <form id="form-signup">
+                    <div class="form-group">
+                        <input type="email" id="signup-email" placeholder="Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="signup-username" placeholder="Nom d'utilisateur" required>
+                    </div>
+                    <div class="form-group password-group">
+                        <div class="password-input-wrapper">
+                            <input type="password" id="signup-password-client" placeholder="Mot de passe (min 8 caractères)" minlength="8" required>
+                            <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('signup-password-client', this)">
+                                <span class="eye-icon">👁️</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="signup-firstname" placeholder="Prénom" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="signup-lastname" placeholder="Nom">
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" id="signup-phone" placeholder="Téléphone" required>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">S'inscrire</button>
+                    
+                    <div class="divider">
+                        <span>OU</span>
+                    </div>
+                    
+                    <button type="button" class="btn-google" id="btn-google-signup-client">
+                        <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                            <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+                            <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+                            <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+                            <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+                        </svg>
+                        S'inscrire avec Google
+                    </button>
+                    
+                    <p>Déjà un compte ? <a href="#" onclick="closeModal('modal-signup'); openModal('modal-login');">Se connecter</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal pour ajouter un avis -->
+    
     <script src="js/app.js"></script>
 </body>
 </html>

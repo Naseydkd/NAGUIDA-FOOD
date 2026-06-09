@@ -1,5 +1,5 @@
 -- =============================================
--- SCHEMA COMPLET - Boule de Neige Donuts
+-- SCHEMA COMPLET - NAGUIDA FOOD
 -- =============================================
 
 -- Users
@@ -14,6 +14,8 @@ CREATE TABLE IF NOT EXISTS users (
     address VARCHAR(255),
     city VARCHAR(80),
     postal_code VARCHAR(20),
+    latitude DECIMAL(10, 8),
+    longitude DECIMAL(11, 8),
     is_admin BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT NOW()
 );
@@ -51,7 +53,9 @@ CREATE TABLE IF NOT EXISTS orders (
     total_price FLOAT NOT NULL,
     delivery_type VARCHAR(50) NOT NULL,
     payment_method VARCHAR(50) NOT NULL,
-    notes TEXT
+    notes TEXT,
+    delivery_latitude DECIMAL(10, 8),
+    delivery_longitude DECIMAL(11, 8)
 );
 
 -- Order Items
@@ -88,3 +92,7 @@ CREATE TABLE IF NOT EXISTS settings (
 INSERT INTO settings (opening_time, closing_time, is_open, notify_on_order)
 SELECT '09:00', '20:00', true, true
 WHERE NOT EXISTS (SELECT 1 FROM settings);
+
+-- Password reset tokens
+ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token VARCHAR(255);
+ALTER TABLE users ADD COLUMN IF NOT EXISTS reset_token_expires TIMESTAMP;

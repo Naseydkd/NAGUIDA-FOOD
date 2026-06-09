@@ -5,20 +5,22 @@
 :root {
     --primary-color: #ffffff;
     --secondary-color: #f8f9fa;
-    --accent-color: #e91e63; /* Rose fuchsia */
-    --text-color: #e91e63; /* Rose fuchsia */
-    --light-gray: #fce4ec; /* Rose très clair */
-    --border-color: #e91e63; /* Rose fuchsia */
-    --success-color: #4caf50;
+    --accent-color: #980d00; /* Orange africain */
+    --accent-green: #2e7d32; /* Vert */
+    --accent-brown: #8d6e63; /* Marron terracotta */
+    --accent-gold: #d4af37; /* Doré */
+    --accent-teal: #00695c; /* Bleu pétrole */
+    --text-color: #333333; /* Texte sombre lisible */
+    --light-gray: #fff3e0; /* Orange très clair */
+    --border-color: #980d00; /* Orange */
+    --success-color: #2e7d32; /* Vert africain */
     --warning-color: #ff9800;
     --danger-color: #f44336;
-    --info-color: #2196f3;
-    --shadow: 0 2px 8px rgba(233, 30, 99, 0.15);
-    --gradient-primary: linear-gradient(135deg, #e91e63, #f06292);
-    --gradient-secondary: linear-gradient(135deg, #f8bbd9, #fce4ec);
-    --purple-accent: #9c27b0;
-    --pink-light: #f8bbd9;
-    --pink-pastel: #fce4ec;
+    --info-color: #00695c; /* Bleu pétrole */
+    --shadow: 0 2px 8px rgba(255, 111, 0, 0.15);
+    --purple-accent: #00695c;
+    --pink-light: #ffcc80;
+    --pink-pastel: #fff3e0;
 }
 
 * {
@@ -45,7 +47,7 @@ body {
 
 .sidebar {
     width: 250px;
-    background: var(--gradient-primary);
+    background: var(--accent-color);
     color: var(--primary-color);
     height: 100vh;
     position: fixed;
@@ -66,8 +68,22 @@ body {
     align-items: center;
 }
 
+.admin-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sidebar-logo {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
 .sidebar-header h2 {
     font-size: 20px;
+    margin: 0;
 }
 
 .toggle-sidebar {
@@ -217,10 +233,10 @@ body {
 }
 
 .stat-card {
-    background: linear-gradient(135deg, #ffffff 0%, #fce4ec 100%);
+    background: var(--accent-color);
     border-radius: 15px;
     padding: 20px;
-    box-shadow: 0 4px 20px rgba(233, 30, 99, 0.1);
+    box-shadow: 0 4px 20px rgba(255, 111, 0, 0.1);
     display: flex;
     align-items: center;
     gap: 15px;
@@ -231,7 +247,7 @@ body {
 .stat-card:hover {
     border-color: var(--accent-color);
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(233, 30, 99, 0.2);
+    box-shadow: 0 8px 25px rgba(255, 111, 0, 0.2);
 }
 
 .stat-icon {
@@ -241,15 +257,15 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--gradient-primary);
+    background: var(--accent-color);
     color: white;
     border-radius: 50%;
-    box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+    box-shadow: 0 4px 15px rgba(255, 111, 0, 0.3);
 }
 
 .stat-content h3 {
     font-size: 14px;
-    color: #999;
+    color: #ffffff;
     margin-bottom: 5px;
 }
 
@@ -539,15 +555,15 @@ tr:hover {
 }
 
 .btn-primary {
-    background: var(--gradient-primary);
+    background: var(--accent-color);
     color: var(--primary-color);
-    box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+    box-shadow: 0 4px 15px rgba(255, 111, 0, 0.3);
 }
 
 .btn-primary:hover {
-    background: linear-gradient(135deg, #c2185b, #e91e63);
+    background: var(--accent-dark);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(233, 30, 99, 0.4);
+    box-shadow: 0 6px 20px rgba(255, 111, 0, 0.4);
 }
 
 .btn-secondary {
@@ -590,7 +606,7 @@ tr:hover {
     top: 15px;
     left: 15px;
     z-index: 200;
-    background: var(--gradient-primary);
+    background: var(--accent-color);
     color: white;
     border: none;
     border-radius: 8px;

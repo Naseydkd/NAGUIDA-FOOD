@@ -22,7 +22,7 @@ async function getOrderWithItems(orderId) {
 
 // POST create order
 router.post('/', async (req, res) => {
-  const { user_id, items, delivery_type, payment_method, notes } = req.body;
+  const { user_id, items, delivery_type, payment_method, notes, delivery_latitude, delivery_longitude } = req.body;
   if (!user_id || !items || !delivery_type || !payment_method)
     return res.status(400).json({ error: 'Champs requis manquants' });
 
@@ -40,9 +40,9 @@ router.post('/', async (req, res) => {
     }
 
     const { rows: [order] } = await client.query(
-      `INSERT INTO orders (user_id, total_price, delivery_type, payment_method, notes)
-       VALUES ($1,$2,$3,$4,$5) RETURNING *`,
-      [user_id, total_price, delivery_type, payment_method, notes]
+      `INSERT INTO orders (user_id, total_price, delivery_type, payment_method, notes, delivery_latitude, delivery_longitude)
+       VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *`,
+      [user_id, total_price, delivery_type, payment_method, notes, delivery_latitude || null, delivery_longitude || null]
     );
 
     for (const { product, quantity } of resolvedItems) {

@@ -106,7 +106,7 @@ async function loadDashboardData() {
     try {
         const [ordersRes, productsRes, usersRes] = await Promise.all([
             fetch(`${API_BASE_URL}/orders/`),
-            fetch(`${API_BASE_URL}/products/`),
+            fetch(`${API_BASE_URL}/products/all`),  // Admin voit TOUS les produits (même stock = 0)
             fetch(`${API_BASE_URL}/users/`)
         ]);
 
@@ -269,10 +269,10 @@ function displayProducts() {
         <div style="margin-bottom: 15px; display: flex; gap: 10px; align-items: center;">
             <select id="filter-category" style="padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
                 <option value="">📁 Toutes les catégories</option>
-                <option value="classique">Classique</option>
-                <option value="gourmand">Gourmand</option>
-                <option value="sain">Sain</option>
-                <option value="special">Spécial</option>
+                <option value="entrees">🥗 Entrées</option>
+                <option value="plats">🍲 Plats</option>
+                <option value="desserts">🍰 Desserts</option>
+                <option value="boissons">🥤 Boissons</option>
             </select>
             
             <select id="sort-products" style="padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
