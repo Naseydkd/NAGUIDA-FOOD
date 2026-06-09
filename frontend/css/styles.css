@@ -524,6 +524,230 @@ body {
 }
 
 /* ===========================
+   ACCUEIL - SECTIONS
+   =========================== */
+
+.home-promo {
+    padding: 36px 0;
+    background: #ffffff;
+}
+
+.promo-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 28px;
+    padding: 34px;
+    border-radius: 18px;
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.58), rgba(0, 0, 0, 0.52)),
+        url('../images/section.png') center / cover no-repeat;
+    color: #ffffff;
+    box-shadow: 0 12px 34px rgba(0, 0, 0, 0.16);
+}
+
+.promo-content h2 {
+    margin: 8px 0 10px;
+    font-size: 30px;
+    line-height: 1.15;
+}
+
+.promo-content p {
+    max-width: 620px;
+    margin: 0;
+    font-size: 17px;
+    opacity: 0.95;
+}
+
+.home-section {
+    padding: 76px 0;
+    background: #ffffff;
+}
+
+.today-menu-section {
+    background: #fff8f2;
+}
+
+.popular-section {
+    background: #ffffff;
+}
+
+.why-section {
+    background: #f7fbf7;
+}
+
+.section-heading {
+    max-width: 720px;
+    margin: 0 auto 38px;
+    text-align: center;
+}
+
+.section-kicker {
+    display: inline-block;
+    color: var(--accent-green);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.section-heading h2 {
+    margin: 10px 0 12px;
+    color: var(--accent-color);
+    font-size: 38px;
+    line-height: 1.15;
+}
+
+.section-heading p {
+    margin: 0;
+    color: #555;
+    font-size: 17px;
+}
+
+.home-products-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.home-product-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-height: 390px;
+    background: #ffffff;
+    border: 1px solid rgba(152, 13, 0, 0.12);
+    border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.home-product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 18px 38px rgba(0, 0, 0, 0.12);
+}
+
+.home-product-image {
+    width: 100%;
+    height: 180px;
+    background: var(--light-gray);
+}
+
+.home-product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.home-product-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 18px;
+}
+
+.home-product-category {
+    color: var(--accent-green);
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.home-product-name {
+    margin: 8px 0;
+    color: var(--text-color);
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.home-product-description {
+    flex: 1;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.45;
+}
+
+.home-product-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.home-product-price {
+    color: var(--accent-color);
+    font-size: 18px;
+    font-weight: 900;
+    white-space: nowrap;
+}
+
+.home-product-card .btn-add-cart {
+    padding: 10px 14px;
+    border: none;
+    border-radius: 22px;
+    background: var(--accent-color);
+    color: #ffffff;
+    cursor: pointer;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.home-empty {
+    grid-column: 1 / -1;
+    padding: 28px;
+    text-align: center;
+    color: #666;
+    background: #ffffff;
+    border-radius: 8px;
+}
+
+.section-action {
+    margin-top: 34px;
+    text-align: center;
+}
+
+.why-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.why-item {
+    min-height: 230px;
+    padding: 26px 22px;
+    background: #ffffff;
+    border: 1px solid rgba(46, 125, 50, 0.13);
+    border-radius: 8px;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06);
+}
+
+.why-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+    border-radius: 50%;
+    background: #fff3e0;
+    font-size: 24px;
+}
+
+.why-item h3 {
+    margin: 0 0 10px;
+    color: var(--accent-color);
+    font-size: 19px;
+}
+
+.why-item p {
+    margin: 0;
+    color: #555;
+    line-height: 1.55;
+}
+
+/* ===========================
    BOUTONS
    =========================== */
 
@@ -589,17 +813,26 @@ body {
    =========================== */
 
 .menu-header {
-    background: var(--accent-color);
+    position: relative;
+    overflow: hidden;
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.5)),
+        url('../images/menu-bg.jpg') center / cover no-repeat;
     color: white;
     padding: 100px 20px 60px;
     text-align: center;
     margin-top: 80px;
 }
 
+.menu-header .container {
+    position: relative;
+    z-index: 1;
+}
+
 .menu-header h1 {
     font-size: 3rem;
     margin-bottom: 1rem;
-    text-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.45);
 }
 
 .menu-header p {
@@ -2779,6 +3012,56 @@ body {
    =========================== */
 
 @media (max-width: 768px) {
+    .home-promo {
+        padding: 24px 0;
+    }
+
+    .promo-content {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 26px;
+    }
+
+    .promo-content h2 {
+        font-size: 25px;
+    }
+
+    .home-section {
+        padding: 56px 0;
+    }
+
+    .section-heading {
+        margin-bottom: 28px;
+        padding: 0 12px;
+    }
+
+    .section-heading h2 {
+        font-size: 30px;
+    }
+
+    .home-products-grid,
+    .why-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .home-product-card {
+        min-height: 360px;
+    }
+
+    .home-product-image {
+        height: 155px;
+    }
+
+    .home-product-footer {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .home-product-card .btn-add-cart {
+        width: 100%;
+    }
+
     .avis-section {
         padding: 60px 0;
     }
@@ -2860,6 +3143,28 @@ body {
 }
 
 @media (max-width: 480px) {
+    .promo-content {
+        padding: 22px;
+    }
+
+    .promo-content h2 {
+        font-size: 22px;
+    }
+
+    .home-products-grid,
+    .why-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .home-product-card,
+    .why-item {
+        min-height: auto;
+    }
+
+    .section-heading h2 {
+        font-size: 27px;
+    }
+
     .avis-header-section h2 {
         font-size: 28px;
     }

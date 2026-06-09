@@ -85,6 +85,14 @@ CREATE TABLE IF NOT EXISTS settings (
     is_open BOOLEAN DEFAULT TRUE,
     notify_email VARCHAR(120),
     notify_on_order BOOLEAN DEFAULT TRUE,
+    ringtone_url TEXT,
+    ringtone_name VARCHAR(255),
+    promo_enabled BOOLEAN DEFAULT TRUE,
+    promo_kicker VARCHAR(120) DEFAULT 'Offre du moment',
+    promo_title VARCHAR(255) DEFAULT 'Livraison rapide pour vos plats africains préférés',
+    promo_text TEXT DEFAULT 'Commandez vos plats maison et recevez-les chauds, prêts à partager.',
+    promo_button_text VARCHAR(120) DEFAULT 'Commander maintenant',
+    today_menu_product_ids TEXT DEFAULT '[]',
     updated_at TIMESTAMP DEFAULT NOW()
 );
 

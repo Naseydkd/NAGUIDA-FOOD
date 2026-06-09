@@ -10,6 +10,7 @@ const API_BASE_URL = window.location.hostname === 'localhost' || window.location
 let currentUser = null;
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 let allProducts = [];
+let homeSettings = {};
 
 // ===========================
 // INITIALISATION
@@ -212,14 +213,22 @@ window.closeModal = function(modalId) {
 
 async function loadProducts() {
     try {
-        const response = await fetch(`${API_BASE_URL}/products/`);
-        if (!response.ok) throw new Error('API Error');
-        const data = await response.json();
+        const [productsResponse, settingsResponse] = await Promise.all([
+            fetch(`${API_BASE_URL}/products/`),
+            fetch(`${API_BASE_URL}/settings/`)
+        ]);
+        if (!productsResponse.ok) throw new Error('API Error');
+        const data = await productsResponse.json();
+        homeSettings = settingsResponse.ok ? await settingsResponse.json() : {};
         allProducts = Array.isArray(data) && data.length > 0 ? data : [];
+        updateHomePromo(homeSettings);
         displayProducts(allProducts);
+        displayHomeSections(allProducts);
     } catch (error) {
         console.warn('❌ API indisponible');
+        updateHomePromo({});
         displayProducts([]);
+        displayHomeSections([]);
     }
 }
 
@@ -307,6 +316,114 @@ function getCategoryDisplayName(category) {
         'boissons': '🥤 Boissons'
     };
     return categoryNames[category] || category;
+}
+
+function displayHomeSections(products) {
+    const todayGrid = document.getElementById('today-menu-grid');
+    const popularGrid = document.getElementById('popular-products-grid');
+
+    if (!todayGrid && !popularGrid) return;
+
+    const availableProducts = Array.isArray(products) ? products.filter(product => product.available !== false) : [];
+    const todayProductIds = getTodayMenuProductIds(homeSettings);
+    const todayProducts = todayProductIds.length
+        ? todayProductIds
+            .map(productId => availableProducts.find(product => Number(product.id) === Number(productId)))
+            .filter(Boolean)
+            .slice(0, 4)
+        : pickProductsByCategories(availableProducts, ['plats', 'entrees', 'boissons', 'desserts'], 4);
+    const featuredProducts = availableProducts.filter(product => product.is_featured);
+    const popularProducts = (featuredProducts.length ? featuredProducts : availableProducts)
+        .sort((a, b) => {
+            const featuredDiff = Number(Boolean(b.is_featured)) - Number(Boolean(a.is_featured));
+            if (featuredDiff !== 0) return featuredDiff;
+            return Number(b.stock || 0) - Number(a.stock || 0);
+        })
+        .slice(0, 4);
+
+    renderHomeProducts(todayGrid, todayProducts);
+    renderHomeProducts(popularGrid, popularProducts);
+    setupProductEventListeners();
+}
+
+function updateHomePromo(settings) {
+    const promoSection = document.getElementById('home-promo');
+    if (!promoSection) return;
+
+    if (settings.promo_enabled === false) {
+        promoSection.style.display = 'none';
+        return;
+    }
+
+    promoSection.style.display = '';
+    document.getElementById('promo-kicker-display').textContent = settings.promo_kicker || 'Offre du moment';
+    document.getElementById('promo-title-display').textContent = settings.promo_title || 'Livraison rapide pour vos plats africains préférés';
+    document.getElementById('promo-text-display').textContent = settings.promo_text || 'Commandez vos plats maison et recevez-les chauds, prêts à partager.';
+    document.getElementById('promo-button-display').textContent = settings.promo_button_text || 'Commander maintenant';
+}
+
+function getTodayMenuProductIds(settings) {
+    const raw = settings.today_menu_product_ids;
+    if (Array.isArray(raw)) return raw.map(Number).filter(Boolean);
+
+    try {
+        const parsed = JSON.parse(raw || '[]');
+        return Array.isArray(parsed) ? parsed.map(Number).filter(Boolean) : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function pickProductsByCategories(products, categories, limit) {
+    const selected = [];
+
+    categories.forEach(category => {
+        const product = products.find(item => item.category === category && !selected.some(selectedItem => selectedItem.id === item.id));
+        if (product) selected.push(product);
+    });
+
+    products.forEach(product => {
+        if (selected.length >= limit) return;
+        if (!selected.some(selectedItem => selectedItem.id === product.id)) {
+            selected.push(product);
+        }
+    });
+
+    return selected.slice(0, limit);
+}
+
+function renderHomeProducts(grid, products) {
+    if (!grid) return;
+
+    if (!products || products.length === 0) {
+        grid.innerHTML = '<div class="home-empty">Aucun plat disponible pour le moment.</div>';
+        return;
+    }
+
+    grid.innerHTML = products.map(product => {
+        const price = typeof product.price === 'number' ? product.price.toFixed(0) : product.price;
+        const imageSrc = product.image_url || product.image || 'images/logo-naguida-light.png';
+        const description = product.description || 'Plat maison disponible à la commande.';
+
+        return `
+            <article class="home-product-card">
+                <div class="home-product-image">
+                    <img src="${imageSrc}" alt="${product.name}">
+                </div>
+                <div class="home-product-info">
+                    <div class="home-product-category">${getCategoryDisplayName(product.category)}</div>
+                    <h3 class="home-product-name">${product.name}</h3>
+                    <p class="home-product-description">${description}</p>
+                    <div class="home-product-footer">
+                        <span class="home-product-price">${price} FCFA</span>
+                        <button class="btn-add-cart" data-product-id="${product.id}" data-product-name="${product.name}" data-product-price="${product.price}">
+                            Ajouter
+                        </button>
+                    </div>
+                </div>
+            </article>
+        `;
+    }).join('');
 }
 
 // ===========================

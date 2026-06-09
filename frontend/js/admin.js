@@ -12,6 +12,7 @@ let allOrders = [];
 let allProducts = [];
 let allUsers = [];
 let allCategories = [];
+let currentSettings = {};
 
 // ===========================
 // AVIS CLIENTS
@@ -127,6 +128,7 @@ async function loadDashboardData() {
         createSalesChart();
         createProductsChart();
         displayReviews();
+        renderTodayMenuProductChoices();
     } catch (error) {
         console.error('Erreur lors du chargement des données:', error);
         showNotification('Erreur lors du chargement des données', 'error');
@@ -301,6 +303,7 @@ function displayProducts() {
                     <th>Prix</th>
                     <th>Stock</th>
                     <th>Disponible</th>
+                    <th>Populaire</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -314,6 +317,7 @@ function displayProducts() {
                         <td>${product.price} FCFA</td>
                         <td><strong>${product.stock || 0}</strong></td>
                         <td>${product.available ? '✅' : '❌'}</td>
+                        <td>${product.is_featured ? '⭐' : '-'}</td>
                         <td>
                             <button class="btn-sm btn-edit" onclick="editProduct(${product.id})">Éditer</button>
                             <button class="btn-sm btn-delete" onclick="deleteProduct(${product.id})">Supprimer</button>
@@ -416,6 +420,7 @@ function editProduct(productId) {
     document.getElementById('product-image').value = product.image_url || '';
     document.getElementById('product-image-file').value = '';
     document.getElementById('product-available').checked = product.available;
+    document.getElementById('product-featured').checked = Boolean(product.is_featured);
     
     // Afficher l'aperçu de l'image existante
     const preview = document.getElementById('preview-img');
@@ -628,6 +633,7 @@ function setupEventListeners() {
         document.getElementById('form-product').reset();
         document.getElementById('product-image-file').value = '';
         document.getElementById('preview-img').style.display = 'none';
+        document.getElementById('product-featured').checked = false;
         document.getElementById('modal-title').textContent = 'Ajouter un produit';
         openModal('modal-product');
     });
@@ -724,7 +730,8 @@ async function submitProduct(e) {
         stock: parseInt(document.getElementById('product-stock').value) || 0,
         description: document.getElementById('product-description').value,
         image_url: imageUrl,
-        available: document.getElementById('product-available').checked
+        available: document.getElementById('product-available').checked,
+        is_featured: document.getElementById('product-featured').checked
     };
 
     try {
@@ -932,12 +939,19 @@ async function loadSettings() {
     try {
         const response = await fetch(`${API_BASE_URL}/settings/`);
         const settings = await response.json();
+        currentSettings = settings;
 
         document.getElementById('opening-time').value = settings.opening_time;
         document.getElementById('closing-time').value = settings.closing_time;
         document.getElementById('is-open').checked = settings.is_open;
         document.getElementById('notify-email').value = settings.notify_email || '';
         document.getElementById('notify-on-order').checked = settings.notify_on_order;
+        document.getElementById('promo-enabled').checked = settings.promo_enabled !== false;
+        document.getElementById('promo-kicker').value = settings.promo_kicker || 'Offre du moment';
+        document.getElementById('promo-title').value = settings.promo_title || 'Livraison rapide pour vos plats africains préférés';
+        document.getElementById('promo-text').value = settings.promo_text || 'Commandez vos plats maison et recevez-les chauds, prêts à partager.';
+        document.getElementById('promo-button-text').value = settings.promo_button_text || 'Commander maintenant';
+        renderTodayMenuProductChoices();
 
         // Charger la sonnerie globale
         if (settings.ringtone_url) {
@@ -955,15 +969,67 @@ async function loadSettings() {
     }
 }
 
+function getTodayMenuProductIds() {
+    const raw = currentSettings.today_menu_product_ids;
+    if (Array.isArray(raw)) return raw.map(Number).filter(Boolean);
+
+    try {
+        const parsed = JSON.parse(raw || '[]');
+        return Array.isArray(parsed) ? parsed.map(Number).filter(Boolean) : [];
+    } catch (e) {
+        return [];
+    }
+}
+
+function renderTodayMenuProductChoices() {
+    const container = document.getElementById('today-menu-products');
+    if (!container) return;
+
+    const selectedIds = getTodayMenuProductIds();
+    const products = allProducts.filter(product => product.available !== false);
+
+    if (!products.length) {
+        container.innerHTML = '<p class="choice-empty">Aucun produit disponible. Ajoute d’abord des produits.</p>';
+        return;
+    }
+
+    container.innerHTML = products.map(product => `
+        <label class="choice-item">
+            <input type="checkbox" class="today-menu-checkbox" value="${product.id}" ${selectedIds.includes(Number(product.id)) ? 'checked' : ''}>
+            <span>${product.name}</span>
+            <small>${product.category} · ${product.price} FCFA</small>
+        </label>
+    `).join('');
+
+    container.querySelectorAll('.today-menu-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', () => {
+            const checked = container.querySelectorAll('.today-menu-checkbox:checked');
+            if (checked.length > 4) {
+                checkbox.checked = false;
+                showNotification('Menu du jour: maximum 4 produits', 'error');
+            }
+        });
+    });
+}
+
 async function saveSettings(e) {
     e.preventDefault();
+    const todayMenuProductIds = Array.from(document.querySelectorAll('.today-menu-checkbox:checked'))
+        .map(checkbox => Number(checkbox.value))
+        .filter(Boolean);
 
     const settings = {
         opening_time: document.getElementById('opening-time').value,
         closing_time: document.getElementById('closing-time').value,
         is_open: document.getElementById('is-open').checked,
         notify_email: document.getElementById('notify-email').value,
-        notify_on_order: document.getElementById('notify-on-order').checked
+        notify_on_order: document.getElementById('notify-on-order').checked,
+        promo_enabled: document.getElementById('promo-enabled').checked,
+        promo_kicker: document.getElementById('promo-kicker').value,
+        promo_title: document.getElementById('promo-title').value,
+        promo_text: document.getElementById('promo-text').value,
+        promo_button_text: document.getElementById('promo-button-text').value,
+        today_menu_product_ids: todayMenuProductIds
     };
 
     try {
@@ -974,6 +1040,7 @@ async function saveSettings(e) {
         });
 
         if (response.ok) {
+            currentSettings = await response.json();
             showNotification('Paramètres enregistrés ✅', 'success');
         } else {
             showNotification('Erreur lors de l\'enregistrement', 'error');

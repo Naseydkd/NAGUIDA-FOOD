@@ -34,14 +34,14 @@ router.get('/:id', async (req, res) => {
 
 // POST create product
 router.post('/', async (req, res) => {
-  const { name, category, description, price, image_url, available = true, stock = 0 } = req.body;
+  const { name, category, description, price, image_url, available = true, stock = 0, is_featured = false } = req.body;
   if (!name || !category || price == null)
     return res.status(400).json({ error: 'Champs requis: name, category, price' });
   try {
     const { rows } = await db.query(
-      `INSERT INTO products (name, category, description, price, image_url, available, stock)
-       VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *`,
-      [name, category, description, price, image_url, available, stock]
+      `INSERT INTO products (name, category, description, price, image_url, available, stock, is_featured)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8) RETURNING *`,
+      [name, category, description, price, image_url, available, stock, is_featured]
     );
     res.status(201).json(rows[0]);
   } catch (e) { res.status(500).json({ error: e.message }); }
@@ -54,11 +54,12 @@ router.put('/:id', async (req, res) => {
     if (!existing[0]) return res.status(404).json({ error: 'Produit non trouvé' });
     const p = existing[0];
     const { name=p.name, category=p.category, description=p.description, price=p.price,
-            image_url=p.image_url, available=p.available, stock=p.stock } = req.body;
+            image_url=p.image_url, available=p.available, stock=p.stock,
+            is_featured=p.is_featured } = req.body;
     const { rows } = await db.query(
       `UPDATE products SET name=$1, category=$2, description=$3, price=$4,
-       image_url=$5, available=$6, stock=$7 WHERE id=$8 RETURNING *`,
-      [name, category, description, price, image_url, available, stock, req.params.id]
+       image_url=$5, available=$6, stock=$7, is_featured=$8 WHERE id=$9 RETURNING *`,
+      [name, category, description, price, image_url, available, stock, is_featured, req.params.id]
     );
     res.json(rows[0]);
   } catch (e) { res.status(500).json({ error: e.message }); }

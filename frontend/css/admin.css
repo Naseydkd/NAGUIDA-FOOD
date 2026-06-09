@@ -272,7 +272,7 @@ body {
 .stat-value {
     font-size: 24px;
     font-weight: bold;
-    color: var(--accent-color);
+    color: #ffffff;
 }
 
 /* ===========================
