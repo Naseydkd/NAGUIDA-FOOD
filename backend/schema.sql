@@ -54,6 +54,9 @@ CREATE TABLE IF NOT EXISTS orders (
     delivery_type VARCHAR(50) NOT NULL,
     payment_method VARCHAR(50) NOT NULL,
     notes TEXT,
+    phone VARCHAR(50),
+    address VARCHAR(255),
+    city VARCHAR(100),
     delivery_latitude DECIMAL(10, 8),
     delivery_longitude DECIMAL(11, 8)
 );

@@ -1,12 +1,20 @@
 const router = require('express').Router();
 const passport = require('../config/passport');
 
+function sanitizeReturnTo(path) {
+  if (!path || typeof path !== 'string') return '/index.html';
+  if (!path.startsWith('/') || path.startsWith('//')) return '/index.html';
+  const allowed = /^\/[\w./#?=&%-]*$/;
+  return allowed.test(path) ? path : '/index.html';
+}
+
 // Route pour démarrer l'authentification Google
 router.get('/google',
   (req, res, next) => {
     if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET || !process.env.GOOGLE_CALLBACK_URL) {
       return res.status(503).json({ error: 'Google OAuth non configuré' });
     }
+    req.session.oauthReturnTo = sanitizeReturnTo(req.query.return_to);
     next();
   },
   passport.authenticate('google', { 
@@ -36,8 +44,9 @@ router.get('/google/callback',
       // Admin → Dashboard admin
       res.redirect(`/admin.html?google_auth=success&user=${encodeURIComponent(JSON.stringify(user))}`);
     } else {
-      // Utilisateur normal → Page d'accueil
-      res.redirect(`/index.html?google_auth=success&user=${encodeURIComponent(JSON.stringify(user))}`);
+      const returnTo = sanitizeReturnTo(req.session?.oauthReturnTo);
+      if (req.session) req.session.oauthReturnTo = null;
+      res.redirect(`${returnTo}?google_auth=success&user=${encodeURIComponent(JSON.stringify(user))}`);
     }
   }
 );

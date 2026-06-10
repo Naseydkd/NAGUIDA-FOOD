@@ -1,3 +1,4 @@
+// Initialisation du serveur Naguida Food
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -38,16 +39,16 @@ app.use(passport.session());
 // Servir le frontend statique
 app.use(express.static(path.join(__dirname, '../frontend')));
 
-app.use('/api/auth',       require('./routes/auth'));
-app.use('/api/products',    require('./routes/products'));
-app.use('/api/users',       require('./routes/users'));
-app.use('/api/orders',      require('./routes/orders'));
-app.use('/api/reviews',     require('./routes/reviews'));
-app.use('/api/settings',    require('./routes/settings'));
-app.use('/api/categories',  require('./routes/categories'));
+app.use('/api/auth', require('./routes/auth'));
+app.use('/api/products', require('./routes/products'));
+app.use('/api/users', require('./routes/users'));
+app.use('/api/orders', require('./routes/orders'));
+app.use('/api/reviews', require('./routes/reviews'));
+app.use('/api/settings', require('./routes/settings'));
+app.use('/api/categories', require('./routes/categories'));
 
 if (require.main === module) {
-  const PORT = process.env.PORT || 5000;
+  const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }
 

@@ -1,7 +1,7 @@
 // Configuration - fonctionne en local et en production
 const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-  ? 'http://localhost:3000/api'
-  : '/api';
+    ? 'http://localhost:3000/api'
+    : '/api';
 const CLOUDINARY_CONFIG = {
     cloudName: 'dnx3uefmc',
     uploadPreset: 'boule-de-neige',
@@ -13,6 +13,15 @@ let allProducts = [];
 let allUsers = [];
 let allCategories = [];
 let currentSettings = {};
+
+function getOrderPhone(order) {
+    return order.phone || order.user_info?.phone || null;
+}
+
+function formatOrderDate(order) {
+    const date = order.order_date || order.created_at;
+    return date ? new Date(date).toLocaleDateString('fr-FR') : '-';
+}
 
 // ===========================
 // AVIS CLIENTS
@@ -150,16 +159,16 @@ function updateDashboard() {
         .filter(order => order.status === 'delivered')
         .reduce((sum, order) => sum + (order.total_price || 0), 0);
     document.getElementById('stat-revenue').textContent = totalRevenue.toFixed(0) + ' FCFA';
-    
+
     // Dernières commandes
     const recentOrders = allOrders.slice(-5).reverse();
     const recentOrdersHtml = recentOrders.map(order => {
         const userInfo = order.user_info || {};
-        const clientName = userInfo.first_name && userInfo.last_name 
-            ? `${userInfo.first_name} ${userInfo.last_name}` 
+        const clientName = userInfo.first_name && userInfo.last_name
+            ? `${userInfo.first_name} ${userInfo.last_name}`
             : `Client #${order.user_id}`;
-        const phone = userInfo.phone ? ` | Tél: ${userInfo.phone}` : '';
-        
+        const phone = getOrderPhone(order) ? ` | Tél: ${getOrderPhone(order)}` : '';
+
         return `
         <div class="list-item">
             <div class="list-item-title">Commande #${order.id}</div>
@@ -219,27 +228,27 @@ function displayOrders(filteredOrders = null) {
             </thead>
             <tbody>
                 ${orders.map(order => {
-                    const userInfo = order.user_info || {};
-                    const clientName = userInfo.first_name && userInfo.last_name 
-                        ? `${userInfo.first_name} ${userInfo.last_name}` 
-                        : `Client #${order.user_id}`;
-                    const phone = userInfo.phone || 'N/A';
-                    
-                    return `
+        const userInfo = order.user_info || {};
+        const clientName = userInfo.first_name && userInfo.last_name
+            ? `${userInfo.first_name} ${userInfo.last_name}`
+            : `Client #${order.user_id}`;
+        const phone = getOrderPhone(order) || 'N/A';
+
+        return `
                     <tr>
                         <td>#${order.id}</td>
                         <td>${clientName}</td>
                         <td>${phone}</td>
                         <td>${order.total_price || 0} FCFA</td>
                         <td><span class="status-badge status-${order.status || 'pending'}">${order.status || 'En attente'}</span></td>
-                        <td>${new Date(order.created_at).toLocaleDateString('fr-FR')}</td>
+                        <td>${formatOrderDate(order)}</td>
                         <td>
                             <button class="btn-sm btn-view" onclick="editOrder(${order.id})">Éditer</button>
                             <button class="btn-sm btn-delete" onclick="deleteOrder(${order.id})">Supprimer</button>
                         </td>
                     </tr>
                     `;
-                }).join('')}
+    }).join('')}
             </tbody>
         </table>
     `;
@@ -254,14 +263,14 @@ function displayProducts() {
     // Filtres et tri
     const filterCategory = document.getElementById('filter-category')?.value || '';
     const sortBy = document.getElementById('sort-products')?.value || 'name';
-    
+
     let filtered = allProducts;
-    
+
     // Filtrer par catégorie
     if (filterCategory) {
         filtered = filtered.filter(p => p.category === filterCategory);
     }
-    
+
     // Trier
     const sorted = [...filtered].sort((a, b) => {
         if (sortBy === 'name') return a.name.localeCompare(b.name);
@@ -271,15 +280,15 @@ function displayProducts() {
         if (sortBy === 'category') return a.category.localeCompare(b.category);
         return 0;
     });
-    
+
     const tableHtml = `
         <div style="margin-bottom: 15px; display: flex; gap: 10px; align-items: center;">
             <select id="filter-category" style="padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
-                <option value="">📁 Toutes les catégories</option>
-                <option value="entrees">🥗 Entrées</option>
-                <option value="plats">🍲 Plats</option>
-                <option value="desserts">🍰 Desserts</option>
-                <option value="boissons">🥤 Boissons</option>
+                <option value="">Toutes les catégories</option>
+                <option value="entrees">Entrées</option>
+                <option value="plats">Plats</option>
+                <option value="desserts">Desserts</option>
+                <option value="boissons">Boissons</option>
             </select>
             
             <select id="sort-products" style="padding: 8px; border-radius: 4px; border: 1px solid #ddd;">
@@ -328,20 +337,20 @@ function displayProducts() {
         </table>
     `;
     document.getElementById('products-table').innerHTML = tableHtml;
-    
+
     // Ajouter les listeners après rendu
     document.getElementById('filter-category').addEventListener('change', displayProducts);
     document.getElementById('sort-products').addEventListener('change', displayProducts);
-    
+
     document.getElementById('select-all-products').addEventListener('change', (e) => {
         document.querySelectorAll('.product-checkbox').forEach(cb => cb.checked = e.target.checked);
         updateDeleteButton();
     });
-    
+
     document.querySelectorAll('.product-checkbox').forEach(cb => {
         cb.addEventListener('change', updateDeleteButton);
     });
-    
+
     document.getElementById('btn-delete-selected').addEventListener('click', deleteSelectedProducts);
 }
 
@@ -355,9 +364,9 @@ function updateDeleteButton() {
 async function deleteSelectedProducts() {
     const selected = document.querySelectorAll('.product-checkbox:checked');
     if (selected.length === 0) return;
-    
+
     if (!confirm(`Supprimer ${selected.length} produit(s)?`)) return;
-    
+
     for (const checkbox of selected) {
         const productId = checkbox.dataset.productId;
         try {
@@ -366,7 +375,7 @@ async function deleteSelectedProducts() {
             console.error('Erreur suppression:', e);
         }
     }
-    
+
     showNotification(`${selected.length} produit(s) supprimé(s)`, 'success');
     loadDashboardData();
 }
@@ -421,7 +430,7 @@ function editProduct(productId) {
     document.getElementById('product-image-file').value = '';
     document.getElementById('product-available').checked = product.available;
     document.getElementById('product-featured').checked = Boolean(product.is_featured);
-    
+
     // Afficher l'aperçu de l'image existante
     const preview = document.getElementById('preview-img');
     if (product.image_url) {
@@ -430,7 +439,7 @@ function editProduct(productId) {
     } else {
         preview.style.display = 'none';
     }
-    
+
     document.getElementById('modal-title').textContent = 'Éditer le produit';
 
     openModal('modal-product');
@@ -468,11 +477,13 @@ function editOrder(orderId) {
     document.getElementById('order-status').value = order.status || 'pending';
 
     const userInfo = order.user_info || {};
-    const clientName = userInfo.first_name && userInfo.last_name 
-        ? `${userInfo.first_name} ${userInfo.last_name}` 
+    const clientName = userInfo.first_name && userInfo.last_name
+        ? `${userInfo.first_name} ${userInfo.last_name}`
         : `Client #${order.user_id}`;
-    const phone = userInfo.phone || 'Non renseigné';
+    const phone = getOrderPhone(order) || 'Non renseigné';
     const email = userInfo.email || 'Non renseigné';
+    const address = order.address || 'Non renseignée';
+    const city = order.city || 'Non renseignée';
 
     const detailsHtml = `
         <div class="order-detail-row">
@@ -482,10 +493,16 @@ function editOrder(orderId) {
             <strong>Client:</strong> <span>${clientName}</span>
         </div>
         <div class="order-detail-row">
-            <strong>Téléphone:</strong> <span>${phone}</span>
+            <strong>Téléphone (commande):</strong> <span>${phone}</span>
         </div>
         <div class="order-detail-row">
             <strong>Email:</strong> <span>${email}</span>
+        </div>
+        <div class="order-detail-row">
+            <strong>Adresse:</strong> <span>${address}</span>
+        </div>
+        <div class="order-detail-row">
+            <strong>Ville:</strong> <span>${city}</span>
         </div>
         <div class="order-detail-row">
             <strong>Montant:</strong> <span>${order.total_price || 0} FCFA</span>
@@ -614,7 +631,7 @@ function setupNavigation() {
                 settings: 'Paramètres'
             };
             document.getElementById('page-title').textContent = titles[sectionId] || sectionId;
-            
+
             // Charger les données appropriées
             if (sectionId === 'categories') loadCategories();
             if (sectionId === 'reviews') displayReviews();
@@ -644,7 +661,7 @@ function setupEventListeners() {
     });
 
     document.getElementById('product-image-file').addEventListener('change', handleImageUpload);
-    
+
     // Aperçu URL image
     document.getElementById('product-image').addEventListener('change', (e) => {
         if (e.target.value) {
@@ -711,7 +728,7 @@ async function submitProduct(e) {
     const productId = document.getElementById('product-id').value;
     const imageUrl = document.getElementById('product-image').value;
     const imageFile = document.getElementById('product-image-file').files[0];
-    
+
     if (imageFile && !imageUrl.includes('res.cloudinary.com')) {
         showNotification('Attends la fin de l\'upload Cloudinary avant d\'enregistrer', 'error');
         return;
@@ -805,7 +822,7 @@ async function loadCategories() {
 
 function displayCategories(categories) {
     const sorted = [...categories].sort((a, b) => a.display_order - b.display_order);
-    
+
     const tableHtml = `
         <table>
             <thead>
@@ -834,14 +851,14 @@ function displayCategories(categories) {
             </tbody>
         </table>
     `;
-    
+
     document.getElementById('categories-table').innerHTML = tableHtml;
 }
 
 async function saveCategory(categoryId) {
     const orderInput = document.querySelector(`.cat-order[data-cat-id="${categoryId}"]`);
     const visibleInput = document.querySelector(`.cat-visible[data-cat-id="${categoryId}"]`);
-    
+
     try {
         const response = await fetch(`${API_BASE_URL}/categories/${categoryId}`, {
             method: 'PUT',
@@ -851,7 +868,7 @@ async function saveCategory(categoryId) {
                 is_visible: visibleInput.checked
             })
         });
-        
+
         if (response.ok) {
             showNotification('Catégorie mise à jour ✅', 'success');
             loadCategories();
@@ -1066,20 +1083,20 @@ function createSalesChart() {
     // Données des 7 derniers jours
     const dates = [];
     const revenues = [];
-    
+
     for (let i = 6; i >= 0; i--) {
         const date = new Date();
         date.setDate(date.getDate() - i);
         const dateStr = date.toISOString().split('T')[0];
         dates.push(dateStr);
-        
+
         const dayRevenue = allOrders
             .filter(order => {
-                const orderDate = order.created_at ? order.created_at.split('T')[0] : '';
+                const orderDate = (order.order_date || order.created_at || '').split('T')[0];
                 return orderDate === dateStr;
             })
             .reduce((sum, order) => sum + (order.total_price || 0), 0);
-        
+
         revenues.push(dayRevenue);
     }
 
@@ -1200,9 +1217,9 @@ async function displayReviews() {
     try {
         const response = await fetch(`${API_BASE_URL}/reviews/`);
         if (!response.ok) throw new Error('Erreur lors du chargement des avis');
-        
+
         const reviews = await response.json();
-        
+
         // Remplir la section "Avis Récents" du dashboard
         if (document.getElementById('recent-reviews')) {
             if (!Array.isArray(reviews) || reviews.length === 0) {
@@ -1219,7 +1236,7 @@ async function displayReviews() {
                 document.getElementById('recent-reviews').innerHTML = recentReviewsHtml;
             }
         }
-        
+
         // Remplir la table des avis (page Avis Clients)
         if (document.getElementById('reviews-table')) {
             if (!Array.isArray(reviews) || reviews.length === 0) {
@@ -1259,7 +1276,7 @@ async function displayReviews() {
                     </tbody>
                 </table>
             `;
-            
+
             document.getElementById('reviews-table').innerHTML = reviewsHtml;
         }
     } catch (error) {
@@ -1301,10 +1318,10 @@ function logout() {
         // Supprimer les données admin du localStorage
         localStorage.removeItem('currentAdmin');
         localStorage.removeItem('adminToken');
-        
+
         // Afficher un message de déconnexion
         console.log('👋 Déconnexion admin réussie - Redirection vers admin-auth.html');
-        
+
         // Petit délai pour l'UX puis redirection
         setTimeout(() => {
             window.location.href = 'admin-auth.html';
@@ -1383,13 +1400,13 @@ function displayCategories() {
         </table>
     `;
     document.getElementById('categories-table').innerHTML = tableHtml;
-    
+
     // Ajouter le listener pour créer une catégorie
     document.getElementById('btn-add-category').addEventListener('click', showAddCategoryDialog);
-    
+
     // Ajouter les listeners
     document.querySelectorAll('.category-order, .category-visible').forEach(input => {
-        input.addEventListener('change', function() {
+        input.addEventListener('change', function () {
             const categoryId = this.dataset.categoryId;
             saveCategory(categoryId);
         });
@@ -1399,19 +1416,19 @@ function displayCategories() {
 async function saveCategory(categoryId) {
     const orderInput = document.querySelector(`input.category-order[data-category-id="${categoryId}"]`);
     const visibleInput = document.querySelector(`input.category-visible[data-category-id="${categoryId}"]`);
-    
+
     const data = {
         display_order: parseInt(orderInput.value),
         is_visible: visibleInput.checked
     };
-    
+
     try {
         const response = await fetch(`${API_BASE_URL}/categories/${categoryId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         });
-        
+
         if (response.ok) {
             showNotification('Catégorie mise à jour ✅', 'success');
             loadCategories();
@@ -1427,7 +1444,7 @@ async function saveCategory(categoryId) {
 function showAddCategoryDialog() {
     const name = prompt('Nom de la nouvelle catégorie:');
     if (!name) return;
-    
+
     createCategory(name);
 }
 
@@ -1442,7 +1459,7 @@ async function createCategory(name) {
                 is_visible: true
             })
         });
-        
+
         if (response.ok) {
             showNotification(`Catégorie "${name}" créée ✅`, 'success');
             loadCategories();
@@ -1698,7 +1715,7 @@ function setupRingtone() {
                 statusDiv.textContent = '❌ Erreur réseau';
                 statusDiv.style.color = '#f44336';
             }
-        };        reader.readAsDataURL(file);
+        }; reader.readAsDataURL(file);
     });
 
     btnTest.addEventListener('click', () => playOrderSound());

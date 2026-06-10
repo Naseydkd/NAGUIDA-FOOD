@@ -5,8 +5,8 @@ window.addEventListener('error', (e) => {
 
 // Configuration - fonctionne en local et en production
 const API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-  ? 'http://localhost:3000/api'
-  : '/api';
+    ? 'http://localhost:3000/api'
+    : '/api';
 let currentUser = null;
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
 let allProducts = [];
@@ -18,19 +18,19 @@ let homeSettings = {};
 
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 Initialisation de l\'application...');
-    
+
     // Charger l'utilisateur depuis localStorage
     const savedUser = localStorage.getItem('currentUser');
     if (savedUser) {
         currentUser = JSON.parse(savedUser);
     }
-    
+
     loadProducts();
     loadReviews(); // Charger les avis
     setupEventListeners();
     updateCartUI();
     updateAuthUI(); // Mettre à jour l'interface d'authentification
-    
+
     console.log('✅ Application initialisée');
 });
 
@@ -39,10 +39,10 @@ document.addEventListener('DOMContentLoaded', () => {
 // ===========================
 
 // Toggle Password Visibility - FONCTION GLOBALE
-window.togglePasswordVisibility = function(inputId, button) {
+window.togglePasswordVisibility = function (inputId, button) {
     const input = document.getElementById(inputId);
     const icon = button.querySelector('.eye-icon');
-    
+
     if (input.type === 'password') {
         input.type = 'text';
         icon.textContent = '🙈'; // Yeux fermés
@@ -55,40 +55,40 @@ window.togglePasswordVisibility = function(inputId, button) {
 }
 
 // Geolocation - FONCTION GLOBALE
-window.getLocation = function() {
+window.getLocation = function () {
     const button = document.getElementById('btn-get-location');
     const locationText = button.querySelector('.location-text');
     const locationIcon = button.querySelector('.location-icon');
-    
+
     if (!navigator.geolocation) {
         showNotification('❌ La géolocalisation n\'est pas supportée par votre navigateur', 'error');
         return;
     }
-    
+
     // État "chargement"
     button.classList.add('loading');
     button.disabled = true;
     locationText.textContent = 'Recherche de votre position...';
     locationIcon.textContent = '🔄';
-    
+
     navigator.geolocation.getCurrentPosition(
         // Succès
         (position) => {
             const latitude = position.coords.latitude;
             const longitude = position.coords.longitude;
-            
+
             // Stocker dans les champs cachés
             document.getElementById('signup-latitude').value = latitude;
             document.getElementById('signup-longitude').value = longitude;
-            
+
             // État "succès"
             button.classList.remove('loading');
             button.classList.add('success');
             locationText.textContent = 'Position enregistrée ✓';
             locationIcon.textContent = '✅';
-            
+
             showNotification(`📍 Position enregistrée: ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`, 'success');
-            
+
             // Réactiver le bouton après 2 secondes
             setTimeout(() => {
                 button.disabled = false;
@@ -103,9 +103,9 @@ window.getLocation = function() {
             button.disabled = false;
             locationText.textContent = 'Utiliser ma position';
             locationIcon.textContent = '📍';
-            
+
             let errorMessage = 'Erreur lors de la récupération de la position';
-            switch(error.code) {
+            switch (error.code) {
                 case error.PERMISSION_DENIED:
                     errorMessage = 'Vous avez refusé l\'accès à la position';
                     break;
@@ -128,40 +128,40 @@ window.getLocation = function() {
 }
 
 // Geolocation pour le CHECKOUT - FONCTION GLOBALE
-window.getLocationCheckout = function() {
+window.getLocationCheckout = function () {
     const button = document.getElementById('btn-get-location-checkout');
     const locationText = button.querySelector('.location-text');
     const locationIcon = button.querySelector('.location-icon');
-    
+
     if (!navigator.geolocation) {
         showNotification('❌ La géolocalisation n\'est pas supportée par votre navigateur', 'error');
         return;
     }
-    
+
     // État "chargement"
     button.classList.add('loading');
     button.disabled = true;
     locationText.textContent = 'Localisation en cours...';
     locationIcon.textContent = '🔄';
-    
+
     navigator.geolocation.getCurrentPosition(
         // Succès
         (position) => {
             const latitude = position.coords.latitude;
             const longitude = position.coords.longitude;
-            
+
             // Stocker dans les champs cachés
             document.getElementById('checkout-latitude').value = latitude;
             document.getElementById('checkout-longitude').value = longitude;
-            
+
             // État "succès"
             button.classList.remove('loading');
             button.classList.add('success');
             locationText.textContent = 'Position enregistrée ✓';
             locationIcon.textContent = '✅';
-            
+
             showNotification(`📍 Position de livraison enregistrée !`, 'success');
-            
+
             // Réactiver le bouton après 2 secondes
             setTimeout(() => {
                 button.disabled = false;
@@ -176,9 +176,9 @@ window.getLocationCheckout = function() {
             button.disabled = false;
             locationText.textContent = 'Utiliser ma position actuelle';
             locationIcon.textContent = '📍';
-            
+
             let errorMessage = 'Erreur lors de la récupération de la position';
-            switch(error.code) {
+            switch (error.code) {
                 case error.PERMISSION_DENIED:
                     errorMessage = 'Vous avez refusé l\'accès à la position';
                     break;
@@ -201,12 +201,12 @@ window.getLocationCheckout = function() {
 }
 
 // Modal functions - FONCTIONS GLOBALES
-window.openModal = function(modalId) {
+window.openModal = function (modalId) {
     const modal = document.getElementById(modalId);
     if (modal) modal.classList.add('show');
 }
 
-window.closeModal = function(modalId) {
+window.closeModal = function (modalId) {
     const modal = document.getElementById(modalId);
     if (modal) modal.classList.remove('show');
 }
@@ -238,13 +238,13 @@ async function loadProducts() {
 
 function displayProducts(products) {
     console.log('🍩 Affichage des produits:', products.length);
-    
+
     const grid = document.getElementById('products-grid');
     if (!grid) {
         console.error('❌ Grille de produits non trouvée');
         return;
     }
-    
+
     // Nettoyer la grille
     grid.innerHTML = '';
 
@@ -258,19 +258,19 @@ function displayProducts(products) {
         try {
             const card = document.createElement('div');
             card.className = 'product-card';
-            
+
             // Obtenir le nom de la catégorie
             const categoryName = getCategoryDisplayName(product.category);
-            
+
             // Description simple
             const description = product.description || 'Donut artisanal fait maison';
-            
+
             // Prix formaté
             const price = typeof product.price === 'number' ? product.price.toFixed(0) : product.price;
-            
+
             // Image avec fallback
             const imageSrc = product.image_url || product.image || 'images/bouledn.png';
-            
+
             // Créer le HTML de manière simple
             card.innerHTML = `
                 <div class="product-image">
@@ -291,20 +291,20 @@ function displayProducts(products) {
                     </div>
                 </div>
             `;
-            
+
             grid.appendChild(card);
-            
+
         } catch (error) {
             console.error('❌ Erreur lors de la création de la carte produit:', error);
         }
     });
-    
+
     // Ajouter les event listeners de manière sécurisée
     setupProductEventListeners();
-    
+
     // Initialiser les filtres après l'affichage des produits
     initializeFilters();
-    
+
     console.log('✅ Produits affichés avec succès');
 }
 
@@ -460,7 +460,7 @@ function initializeFilters() {
                 document.querySelectorAll('.filtre-btn').forEach(b => b.classList.remove('active'));
                 // Ajouter la classe active au bouton cliqué
                 btn.classList.add('active');
-                
+
                 // Filtrer les produits
                 filterProducts(btn.dataset.category);
             });
@@ -544,6 +544,21 @@ function updateCartUI() {
 
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     if (cartCount) cartCount.textContent = totalItems;
+
+    // Mettre à jour le badge du panier fixe mobile
+    const fixedBadge = document.getElementById('fixed-cart-count');
+    if (fixedBadge) {
+        fixedBadge.textContent = totalItems;
+        if (totalItems > 0) {
+            fixedBadge.classList.remove('hidden');
+            // Animation bounce
+            fixedBadge.classList.remove('bounce');
+            void fixedBadge.offsetWidth; // force reflow
+            fixedBadge.classList.add('bounce');
+        } else {
+            fixedBadge.classList.add('hidden');
+        }
+    }
 
     if (!cartItemsDiv) return;
 
@@ -633,7 +648,7 @@ function showNotification(message, type = 'info') {
 
 function setupEventListeners() {
     console.log('🔧 Configuration des event listeners...');
-    
+
     // Menu burger
     const hamburger = document.getElementById('hamburger');
     const navbarMenu = document.getElementById('navbar-menu');
@@ -655,16 +670,16 @@ function setupEventListeners() {
 
     // BOUTONS PRINCIPAUX
     setupMainButtons();
-    
+
     // FORMULAIRES
     setupForms();
-    
+
     // MODALES
     setupModals();
-    
+
     // AVIS
     setupReviews();
-    
+
     console.log('✅ Tous les event listeners configurés');
 }
 
@@ -678,6 +693,20 @@ function setupMainButtons() {
         });
     }
 
+    // Panier fixe mobile
+    const mobileFixedCart = document.getElementById('mobile-fixed-cart');
+    if (mobileFixedCart) {
+        mobileFixedCart.addEventListener('click', () => {
+            const modalPanier = document.getElementById('modal-panier');
+            if (modalPanier) {
+                openModal('modal-panier');
+            } else {
+                // Si pas de modal panier sur cette page, rediriger vers menu.html
+                window.location.href = 'menu.html';
+            }
+        });
+    }
+
     // Connexion
     const btnLogin = document.getElementById('btn-login');
     if (btnLogin) {
@@ -687,16 +716,16 @@ function setupMainButtons() {
         });
         console.log('✅ Bouton connexion configuré');
     }
-    
+
     // Boutons Google OAuth
     const btnGoogleLoginClient = document.getElementById('btn-google-login-client');
     const btnGoogleSignupClient = document.getElementById('btn-google-signup-client');
-    
+
     if (btnGoogleLoginClient) {
         btnGoogleLoginClient.addEventListener('click', handleGoogleAuth);
         console.log('✅ Bouton Google Login configuré');
     }
-    
+
     if (btnGoogleSignupClient) {
         btnGoogleSignupClient.addEventListener('click', handleGoogleAuth);
         console.log('✅ Bouton Google Signup configuré');
@@ -731,6 +760,11 @@ function setupMainButtons() {
     if (btnCheckout) {
         btnCheckout.addEventListener('click', () => {
             closeModal('modal-panier');
+            if (!currentUser) {
+                showNotification('Veuillez créer un compte pour passer commande', 'error');
+                openModal('modal-signup');
+                return;
+            }
             openModal('modal-checkout');
         });
     }
@@ -781,24 +815,24 @@ function displayReviewsSlider(reviews) {
     reviewsData = reviews || [];
     const sliderContainer = document.getElementById('reviews-slider');
     const noReviewsDiv = document.getElementById('no-reviews');
-    
+
     if (!sliderContainer) {
         console.error('Container du slider non trouvé');
         return;
     }
-    
+
     if (reviewsData.length === 0) {
         sliderContainer.style.display = 'none';
         if (noReviewsDiv) noReviewsDiv.style.display = 'block';
         return;
     }
-    
+
     sliderContainer.style.display = 'flex';
     if (noReviewsDiv) noReviewsDiv.style.display = 'none';
-    
+
     // Créer les avis en double pour un défilement infini
     const doubledReviews = [...reviewsData, ...reviewsData];
-    
+
     const reviewsHTML = doubledReviews.map(review => `
         <div class="avis-card">
             <div class="avis-header">
@@ -819,21 +853,21 @@ function displayReviewsSlider(reviews) {
             </div>
         </div>
     `).join('');
-    
+
     sliderContainer.innerHTML = reviewsHTML;
-    
+
     // Masquer les contrôles manuels car on a un défilement continu
     const sliderControls = document.querySelector('.slider-controls');
     if (sliderControls) {
         sliderControls.style.display = 'none';
     }
-    
+
     // Masquer les dots
     const sliderDots = document.getElementById('slider-dots');
     if (sliderDots) {
         sliderDots.style.display = 'none';
     }
-    
+
     console.log('✅ Slider continu initialisé avec', doubledReviews.length, 'avis (doublés pour boucle infinie)');
 }
 
@@ -841,17 +875,17 @@ function updateReviewsStats(reviews) {
     const totalCount = document.getElementById('total-reviews-count');
     const averageStars = document.getElementById('average-stars');
     const averageRating = document.getElementById('average-rating-display');
-    
+
     if (!reviews || reviews.length === 0) {
         if (totalCount) totalCount.textContent = '0';
         if (averageStars) averageStars.textContent = '☆☆☆☆☆';
         if (averageRating) averageRating.textContent = '0.0';
         return;
     }
-    
+
     const total = reviews.length;
     const average = reviews.reduce((sum, review) => sum + review.rating, 0) / total;
-    
+
     if (totalCount) totalCount.textContent = total;
     if (averageRating) averageRating.textContent = average.toFixed(1);
     if (averageStars) {
@@ -901,9 +935,9 @@ async function submitReview(productId, name, rating, comment) {
 function loadProductsForReview() {
     const select = document.getElementById('review-product');
     if (!select || !allProducts) return;
-    
+
     select.innerHTML = '<option value="">Sélectionnez un produit</option>';
-    
+
     allProducts.forEach(product => {
         const option = document.createElement('option');
         option.value = product.id;
@@ -919,7 +953,7 @@ function displayReviews(reviews) {
 
 function setupReviews() {
     console.log('⭐ Configuration des avis...');
-    
+
     // Event listeners pour les avis
     const btnAddReview = document.getElementById('btn-add-review');
     if (btnAddReview) {
@@ -929,23 +963,23 @@ function setupReviews() {
         });
         console.log('✅ Bouton d\'ajout d\'avis configuré');
     }
-    
+
     // Formulaire d'ajout d'avis
     const formReview = document.getElementById('form-review');
     if (formReview) {
         formReview.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const productId = document.getElementById('review-product')?.value;
             const name = document.getElementById('review-name')?.value;
             const rating = document.querySelector('input[name="rating"]:checked')?.value;
             const comment = document.getElementById('review-comment')?.value;
-            
+
             if (!productId || !name || !rating || !comment) {
                 showNotification('Veuillez remplir tous les champs', 'error');
                 return;
             }
-            
+
             const success = await submitReview(parseInt(productId), name, parseInt(rating), comment);
             if (success) {
                 closeModal('modal-review');
@@ -1056,8 +1090,9 @@ function updateAuthUI() {
 
 async function submitOrder(address, city, phone, deliveryType, paymentMethod, notes, latitude, longitude) {
     if (!currentUser) {
-        showNotification('Veuillez vous connecter d\'abord', 'error');
-        openModal('modal-login');
+        showNotification('Veuillez créer un compte pour passer commande', 'error');
+        closeModal('modal-checkout');
+        openModal('modal-signup');
         return;
     }
 
@@ -1109,7 +1144,7 @@ async function submitOrder(address, city, phone, deliveryType, paymentMethod, no
 }
 function setupForms() {
     console.log('📝 Configuration des formulaires...');
-    
+
     // Authentification
     const formLogin = document.getElementById('form-login');
     if (formLogin) {
@@ -1132,7 +1167,7 @@ function setupForms() {
             const firstName = document.getElementById('signup-firstname')?.value;
             const lastName = document.getElementById('signup-lastname')?.value;
             const phone = document.getElementById('signup-phone')?.value;
-            
+
             signup(email, username, password, firstName, lastName, phone);
         });
         console.log('✅ Formulaire d\'inscription configuré');
@@ -1174,38 +1209,40 @@ function setupForms() {
 
 function handleGoogleAuth(e) {
     e.preventDefault();
-    
+
     // Ajouter une classe de loading au bouton
     const button = e.currentTarget;
     button.classList.add('loading');
-    
+
     // Rediriger vers l'authentification Google
     const baseUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         ? 'http://localhost:3000'
         : window.location.origin;
-    
-    window.location.href = `${baseUrl}/api/auth/google`;
+
+    const returnTo = encodeURIComponent(window.location.pathname + window.location.hash);
+    window.location.href = `${baseUrl}/api/auth/google?return_to=${returnTo}`;
 }
 
 // Vérifier si on revient d'une authentification Google
 function checkGoogleAuthCallback() {
     const params = new URLSearchParams(window.location.search);
-    
+
     if (params.get('google_auth') === 'success') {
         try {
             const userJson = params.get('user');
             if (userJson) {
                 const user = JSON.parse(decodeURIComponent(userJson));
-                
+
                 // Sauvegarder l'utilisateur
                 currentUser = user;
                 localStorage.setItem('currentUser', JSON.stringify(user));
-                
+
                 showNotification('✅ Connexion Google réussie !', 'success');
                 updateAuthUI();
-                
-                // Nettoyer l'URL
-                window.history.replaceState({}, document.title, window.location.pathname);
+
+                // Nettoyer l'URL (conserver le hash ex. #avis)
+                const cleanUrl = window.location.pathname + window.location.hash;
+                window.history.replaceState({}, document.title, cleanUrl);
             }
         } catch (error) {
             console.error('Erreur parsing user Google:', error);
@@ -1213,9 +1250,9 @@ function checkGoogleAuthCallback() {
         }
     } else if (params.get('error') === 'google_auth_failed') {
         showNotification('Erreur lors de l\'authentification Google. Veuillez réessayer.', 'error');
-        
-        // Nettoyer l'URL
-        window.history.replaceState({}, document.title, window.location.pathname);
+
+        // Nettoyer l'URL (conserver le hash ex. #avis)
+        window.history.replaceState({}, document.title, window.location.pathname + window.location.hash);
     }
 }
 

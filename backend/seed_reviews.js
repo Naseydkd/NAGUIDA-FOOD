@@ -2,12 +2,12 @@ require('dotenv').config();
 const db = require('./db');
 
 const demoReviews = [
-  { product_name: 'Donut Chocolat', rating: 5, comment: 'Absolument délicieux ! Les donuts sont frais et le goût est incroyable.', user_name: 'Marie L.' },
-  { product_name: 'Donut Vanille',  rating: 4, comment: 'Très bon service et produits de qualité. Je recommande !',               user_name: 'Pierre D.' },
-  { product_name: 'Donut Nutella',  rating: 5, comment: 'Les meilleurs donuts de la ville ! Livraison rapide en plus.',            user_name: 'Sophie M.' },
-  { product_name: 'Donut Caramel Beurre Salé', rating: 4, comment: 'Parfait pour le petit-déjeuner. Texture moelleuse et goût authentique.', user_name: 'Ahmed K.' },
-  { product_name: 'Donut Fraise Chantilly', rating: 5, comment: 'Une découverte fantastique ! Je vais commander régulièrement.',   user_name: 'Lucie R.' },
-  { product_name: 'Donut Pistache', rating: 4, comment: 'Très satisfait de ma commande. Donuts savoureux et bien présentés.',     user_name: 'Thomas B.' },
+  { product_name: 'Poulet Braisé',     rating: 5, comment: 'Absolument délicieux ! Le poulet est bien mariné, tendre et cuit à la perfection.', user_name: 'Marie L.' },
+  { product_name: 'Alloco',            rating: 5, comment: 'L\'alloco est excellent, bien doré et pas trop gras. La sauce pimentée est divine !', user_name: 'Pierre D.' },
+  { product_name: 'Riz Gras',          rating: 4, comment: 'Très bon plat avec beaucoup de goût. Portion généreuse, je recommande !',               user_name: 'Sophie M.' },
+  { product_name: 'Poisson Braisé',    rating: 5, comment: 'Poisson frais très savoureux et bien épicé. Livraison rapide et soignée.',            user_name: 'Ahmed K.' },
+  { product_name: 'Attiéké Poisson',   rating: 5, comment: 'Un régal ! L\'attiéké est bien frais et le poisson parfaitement frit.',                 user_name: 'Lucie R.' },
+  { product_name: 'Bissap Rouge',      rating: 4, comment: 'Jus de bissap très rafraîchissant, bien dosé en sucre.',                                 user_name: 'Thomas B.' },
 ];
 
 async function seed() {

@@ -1,9 +1,27 @@
 const router = require('express').Router();
 const db = require('../db');
 
+let orderColumnsReady = null;
+
+function ensureOrderColumns() {
+  if (!orderColumnsReady) {
+    orderColumnsReady = db.query(`
+      ALTER TABLE orders
+      ADD COLUMN IF NOT EXISTS phone VARCHAR(50),
+      ADD COLUMN IF NOT EXISTS address VARCHAR(255),
+      ADD COLUMN IF NOT EXISTS city VARCHAR(100)
+    `).catch((err) => {
+      orderColumnsReady = null;
+      throw err;
+    });
+  }
+  return orderColumnsReady;
+}
+
 async function getOrderWithItems(orderId) {
+  await ensureOrderColumns();
   const { rows: [order] } = await db.query(
-    `SELECT o.*, u.first_name, u.last_name, u.phone, u.email
+    `SELECT o.*, u.first_name, u.last_name, u.phone AS user_phone, u.email
      FROM orders o LEFT JOIN users u ON o.user_id = u.id WHERE o.id=$1`,
     [orderId]
   );
@@ -13,18 +31,26 @@ async function getOrderWithItems(orderId) {
      JOIN products p ON oi.product_id = p.id WHERE oi.order_id=$1`,
     [orderId]
   );
+  const contactPhone = order.phone || order.user_phone || null;
   return {
     ...order,
-    user_info: { first_name: order.first_name, last_name: order.last_name, phone: order.phone, email: order.email },
+    user_info: {
+      first_name: order.first_name,
+      last_name: order.last_name,
+      phone: contactPhone,
+      email: order.email
+    },
     items: items.map(i => ({ ...i, total: i.quantity * i.unit_price }))
   };
 }
 
 // POST create order
 router.post('/', async (req, res) => {
-  const { user_id, items, delivery_type, payment_method, notes, delivery_latitude, delivery_longitude } = req.body;
+  const { user_id, items, delivery_type, payment_method, notes, phone, address, city, delivery_latitude, delivery_longitude } = req.body;
   if (!user_id || !items || !delivery_type || !payment_method)
     return res.status(400).json({ error: 'Champs requis manquants' });
+
+  await ensureOrderColumns();
 
   const client = await db.connect();
   try {
@@ -40,9 +66,9 @@ router.post('/', async (req, res) => {
     }
 
     const { rows: [order] } = await client.query(
-      `INSERT INTO orders (user_id, total_price, delivery_type, payment_method, notes, delivery_latitude, delivery_longitude)
-       VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *`,
-      [user_id, total_price, delivery_type, payment_method, notes, delivery_latitude || null, delivery_longitude || null]
+      `INSERT INTO orders (user_id, total_price, delivery_type, payment_method, notes, phone, address, city, delivery_latitude, delivery_longitude)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *`,
+      [user_id, total_price, delivery_type, payment_method, notes, phone || null, address || null, city || null, delivery_latitude || null, delivery_longitude || null]
     );
 
     for (const { product, quantity } of resolvedItems) {

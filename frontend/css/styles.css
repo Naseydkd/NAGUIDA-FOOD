@@ -3559,3 +3559,88 @@ body {
         font-size: 12px;
     }
 }
+
+/* ===========================
+   PANIER FIXE MOBILE (Floating)
+   =========================== */
+
+.mobile-fixed-cart {
+    display: none;
+    position: fixed;
+    bottom: 24px;
+    right: 20px;
+    z-index: 999;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: var(--accent-color);
+    color: #ffffff;
+    box-shadow:
+        0 6px 20px rgba(152, 13, 0, 0.4),
+        0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.mobile-fixed-cart:active {
+    transform: scale(0.92);
+}
+
+.mobile-fixed-cart:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow:
+        0 10px 30px rgba(152, 13, 0, 0.5),
+        0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.mobile-fixed-cart .fixed-cart-icon {
+    font-size: 26px;
+    line-height: 1;
+    pointer-events: none;
+}
+
+.mobile-fixed-cart .fixed-cart-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    border-radius: 11px;
+    background: var(--accent-green);
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(46, 125, 50, 0.45);
+    pointer-events: none;
+    transition: transform 0.3s ease;
+}
+
+.mobile-fixed-cart .fixed-cart-badge.bounce {
+    animation: badgeBounce 0.4s ease;
+}
+
+.mobile-fixed-cart .fixed-cart-badge.hidden {
+    display: none;
+}
+
+@keyframes badgeBounce {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.5); }
+    70%  { transform: scale(0.85); }
+    100% { transform: scale(1); }
+}
+
+/* Afficher uniquement sur mobile */
+@media (max-width: 768px) {
+    .mobile-fixed-cart {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

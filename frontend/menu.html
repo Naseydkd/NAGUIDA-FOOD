@@ -109,17 +109,32 @@
                 <h2>Connexion</h2>
                 <form id="form-login">
                     <div class="form-group">
-                        <input type="email" placeholder="Email" required>
+                        <input type="email" id="login-email" placeholder="Email" required>
                     </div>
                     <div class="form-group password-group">
                         <div class="password-input-wrapper">
-                            <input type="password" id="login-password-menu" placeholder="Mot de passe" required>
-                            <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('login-password-menu', this)">
+                            <input type="password" id="login-password-client" placeholder="Mot de passe" required>
+                            <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('login-password-client', this)">
                                 <span class="eye-icon">👁️</span>
                             </button>
                         </div>
                     </div>
                     <button type="submit" class="btn-primary">Se connecter</button>
+
+                    <div class="divider">
+                        <span>OU</span>
+                    </div>
+
+                    <button type="button" class="btn-google" id="btn-google-login-client">
+                        <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                            <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+                            <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+                            <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+                            <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+                        </svg>
+                        Se connecter avec Google
+                    </button>
+
                     <p>Pas de compte ? <a href="#" id="btn-signup">S'inscrire</a></p>
                 </form>
             </div>
@@ -134,29 +149,44 @@
                 <h2>Inscription</h2>
                 <form id="form-signup">
                     <div class="form-group">
-                        <input type="email" placeholder="Email" required>
+                        <input type="email" id="signup-email" placeholder="Email" required>
                     </div>
                     <div class="form-group">
-                        <input type="text" placeholder="Nom d'utilisateur" required>
+                        <input type="text" id="signup-username" placeholder="Nom d'utilisateur" required>
                     </div>
                     <div class="form-group password-group">
                         <div class="password-input-wrapper">
-                            <input type="password" id="signup-password-menu" placeholder="Mot de passe (min 8 caractères)" minlength="8" required>
-                            <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('signup-password-menu', this)">
+                            <input type="password" id="signup-password-client" placeholder="Mot de passe (min 8 caractères)" minlength="8" required>
+                            <button type="button" class="toggle-password-btn" onclick="togglePasswordVisibility('signup-password-client', this)">
                                 <span class="eye-icon">👁️</span>
                             </button>
                         </div>
                     </div>
                     <div class="form-group">
-                        <input type="text" id="signup-firstname" placeholder="Prénom">
+                        <input type="text" id="signup-firstname" placeholder="Prénom" required>
                     </div>
                     <div class="form-group">
                         <input type="text" id="signup-lastname" placeholder="Nom">
                     </div>
                     <div class="form-group">
-                        <input type="tel" id="signup-phone" placeholder="Téléphone">
+                        <input type="tel" id="signup-phone" placeholder="Téléphone" required>
                     </div>
                     <button type="submit" class="btn-primary">S'inscrire</button>
+
+                    <div class="divider">
+                        <span>OU</span>
+                    </div>
+
+                    <button type="button" class="btn-google" id="btn-google-signup-client">
+                        <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+                            <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
+                            <path fill="#FF3D00" d="M6.306,14.691l6.571,4.819C14.655,15.108,18.961,12,24,12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C16.318,4,9.656,8.337,6.306,14.691z"/>
+                            <path fill="#4CAF50" d="M24,44c5.166,0,9.86-1.977,13.409-5.192l-6.19-5.238C29.211,35.091,26.715,36,24,36c-5.202,0-9.619-3.317-11.283-7.946l-6.522,5.025C9.505,39.556,16.227,44,24,44z"/>
+                            <path fill="#1976D2" d="M43.611,20.083H42V20H24v8h11.303c-0.792,2.237-2.231,4.166-4.087,5.571c0.001-0.001,0.002-0.001,0.003-0.002l6.19,5.238C36.971,39.205,44,34,44,24C44,22.659,43.862,21.35,43.611,20.083z"/>
+                        </svg>
+                        S'inscrire avec Google
+                    </button>
+
                     <p>Déjà un compte ? <a href="#" onclick="closeModal('modal-signup'); openModal('modal-login');">Se connecter</a></p>
                 </form>
             </div>
@@ -222,6 +252,12 @@
             </div>
         </div>
     </div>
+
+    <!-- Panier fixe mobile -->
+    <button class="mobile-fixed-cart" id="mobile-fixed-cart" aria-label="Ouvrir le panier">
+        <span class="fixed-cart-icon">🛒</span>
+        <span class="fixed-cart-badge hidden" id="fixed-cart-count">0</span>
+    </button>
 
     <script src="js/app.js"></script>
 </body>
