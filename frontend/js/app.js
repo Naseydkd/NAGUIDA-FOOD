@@ -12,6 +12,22 @@ let cart = JSON.parse(localStorage.getItem('cart')) || [];
 let allProducts = [];
 let homeSettings = {};
 
+const PENDING_CHECKOUT_KEY = 'resumeCheckout';
+
+function setPendingCheckout() {
+    sessionStorage.setItem(PENDING_CHECKOUT_KEY, 'true');
+}
+
+function resumeCheckoutIfPending() {
+    if (sessionStorage.getItem(PENDING_CHECKOUT_KEY) !== 'true') return;
+    if (!currentUser || cart.length === 0) return;
+    if (!document.getElementById('modal-checkout')) return;
+
+    sessionStorage.removeItem(PENDING_CHECKOUT_KEY);
+    openModal('modal-checkout');
+    showNotification('Vous pouvez finaliser votre commande', 'success');
+}
+
 // ===========================
 // INITIALISATION
 // ===========================
@@ -761,6 +777,7 @@ function setupMainButtons() {
         btnCheckout.addEventListener('click', () => {
             closeModal('modal-panier');
             if (!currentUser) {
+                setPendingCheckout();
                 showNotification('Veuillez créer un compte pour passer commande', 'error');
                 openModal('modal-signup');
                 return;
@@ -1017,6 +1034,8 @@ async function login(email, password) {
         updateAuthUI();
         closeModal('modal-login');
         showNotification('Connecté avec succès!', 'success');
+        resumeCheckoutIfPending();
+        notifyAuthChange();
     } catch (error) {
         console.error('Erreur lors de la connexion:', error);
         showNotification('Erreur de connexion', 'error');
@@ -1045,13 +1064,21 @@ async function signup(email, username, password, firstName, lastName, phone) {
             return;
         }
 
-        showNotification('Compte créé! Veuillez vous connecter.', 'success');
+        currentUser = data.user;
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        updateAuthUI();
         closeModal('modal-signup');
-        openModal('modal-login');
+        showNotification('Compte créé avec succès!', 'success');
+        resumeCheckoutIfPending();
+        notifyAuthChange();
     } catch (error) {
         console.error('Erreur lors de l\'inscription:', error);
         showNotification('Erreur lors de l\'inscription', 'error');
     }
+}
+
+function notifyAuthChange() {
+    document.dispatchEvent(new Event('userAuthChanged'));
 }
 
 function logout() {
@@ -1059,6 +1086,7 @@ function logout() {
     localStorage.removeItem('currentUser');
     updateAuthUI();
     showNotification('Déconnecté', 'success');
+    notifyAuthChange();
 }
 
 function updateAuthUI() {
@@ -1090,6 +1118,7 @@ function updateAuthUI() {
 
 async function submitOrder(address, city, phone, deliveryType, paymentMethod, notes, latitude, longitude) {
     if (!currentUser) {
+        setPendingCheckout();
         showNotification('Veuillez créer un compte pour passer commande', 'error');
         closeModal('modal-checkout');
         openModal('modal-signup');
@@ -1137,6 +1166,9 @@ async function submitOrder(address, city, phone, deliveryType, paymentMethod, no
         updateCartUI();
         closeModal('modal-checkout');
         closeModal('modal-panier');
+        setTimeout(() => {
+            window.location.href = `commandes.html?id=${data.id}`;
+        }, 800);
     } catch (error) {
         console.error('Erreur lors de la création de la commande:', error);
         showNotification('Erreur lors de la création de la commande', 'error');
@@ -1239,6 +1271,8 @@ function checkGoogleAuthCallback() {
 
                 showNotification('✅ Connexion Google réussie !', 'success');
                 updateAuthUI();
+                resumeCheckoutIfPending();
+                notifyAuthChange();
 
                 // Nettoyer l'URL (conserver le hash ex. #avis)
                 const cleanUrl = window.location.pathname + window.location.hash;

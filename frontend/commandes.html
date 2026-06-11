@@ -3,49 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NAGUIDA FOOD - La bonne cuisine à votre porte</title>
+    <title>Mes commandes - NAGUIDA FOOD</title>
     <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
             <a href="index.html" class="navbar-brand">
                 <img src="images/logo-naguida-light.png" alt="NAGUIDA FOOD Logo" class="brand-logo">
                 <div class="brand-info">
-                    <span class="brand-text">NAGUIDA FOOD</span>    
+                    <span class="brand-text">NAGUIDA FOOD</span>
                     <span class="brand-subtitle">La bonne cuisine à votre porte</span>
                 </div>
             </a>
-            
+
             <button class="hamburger" id="hamburger">
                 <span class="hamburger-line"></span>
                 <span class="hamburger-line"></span>
                 <span class="hamburger-line"></span>
             </button>
-            
+
             <div class="navbar-menu" id="navbar-menu">
                 <div class="nav-links">
-                    <a href="index.html" class="nav-link active">
-                        <span class="nav-icon"></span>
+                    <a href="index.html" class="nav-link">
                         <span class="nav-text">Accueil</span>
                     </a>
                     <a href="menu.html" class="nav-link">
-                        <span class="nav-icon"></span>
                         <span class="nav-text">Menu</span>
                     </a>
-                    <a href="commandes.html" class="nav-link">
-                        <span class="nav-icon"></span>
+                    <a href="commandes.html" class="nav-link active">
                         <span class="nav-text">Mes commandes</span>
                     </a>
-                    <a href="#avis" class="nav-link">
-                        <span class="nav-icon"></span>
+                    <a href="index.html#avis" class="nav-link">
                         <span class="nav-text">Avis</span>
                     </a>
                 </div>
-                
+
                 <div class="nav-actions">
                     <button class="nav-cart" id="btn-panier">
                         <span class="cart-icon">🛒</span>
@@ -53,7 +48,6 @@
                         <span class="cart-badge" id="cart-count">0</span>
                     </button>
                     <button id="btn-login" class="btn-login">
-                        <span class="login-icon"></span>
                         <span class="login-text">Connexion</span>
                     </button>
                 </div>
@@ -61,145 +55,41 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="accueil" class="hero">
-        <div class="hero-content">
-            <h1>Bienvenue chez NAGUIDA FOOD</h1>
-            <p>La bonne cuisine traditionnelle africaine, livrée chez vous</p>
-            <a href="menu.html" class="btn-primary">Découvrir notre menu</a>
-        </div>
-    </section>
-
-    <!-- Bannière Promo -->
-    <section class="home-promo" id="home-promo">
+    <section class="menu-header orders-page-header">
         <div class="container">
-            <div class="promo-content">
-                <div>
-                    <span class="section-kicker" id="promo-kicker-display">Offre du moment</span>
-                    <h2 id="promo-title-display">Livraison rapide pour vos plats africains préférés</h2>
-                    <p id="promo-text-display">Commandez vos plats maison et recevez-les chauds, prêts à partager.</p>
-                </div>
-                <a href="menu.html" class="btn-primary" id="promo-button-display">Commander maintenant</a>
-            </div>
+            <h1>Mes commandes</h1>
+            <p>Suivez l'état de vos commandes en temps réel</p>
         </div>
     </section>
 
-    <!-- Aujourd'hui au menu -->
-    <section class="home-section today-menu-section">
+    <section class="orders-section">
         <div class="container">
-            <div class="section-heading">
-                <span class="section-kicker">Aujourd'hui</span>
-                <h2>Aujourd'hui au menu</h2>
-                <p>Une sélection de plats disponibles pour commander rapidement.</p>
+            <div id="orders-auth-required" class="orders-auth-required" style="display: none;">
+                <div class="orders-empty-icon">🔐</div>
+                <h2>Connectez-vous pour voir vos commandes</h2>
+                <p>Créez un compte ou connectez-vous pour suivre vos commandes.</p>
+                <div class="orders-auth-actions">
+                    <button class="btn-primary" id="btn-go-signup">S'inscrire</button>
+                    <button class="btn-secondary" id="btn-go-login">Se connecter</button>
+                </div>
             </div>
-            <div id="today-menu-grid" class="home-products-grid">
-                <!-- Produits chargés via JavaScript -->
+
+            <div id="orders-loading" class="orders-loading">
+                <span class="orders-spinner"></span>
+                <p>Chargement de vos commandes...</p>
             </div>
+
+            <div id="orders-empty" class="orders-empty" style="display: none;">
+                <div class="orders-empty-icon">📦</div>
+                <h2>Aucune commande pour le moment</h2>
+                <p>Découvrez notre menu et passez votre première commande.</p>
+                <a href="menu.html" class="btn-primary">Voir le menu</a>
+            </div>
+
+            <div id="orders-list" class="orders-list"></div>
         </div>
     </section>
 
-    <!-- Plats populaires -->
-    <section class="home-section popular-section">
-        <div class="container">
-            <div class="section-heading">
-                <span class="section-kicker">Favoris clients</span>
-                <h2>Plats populaires</h2>
-                <p>Les classiques que nos clients ajoutent le plus souvent à leur panier.</p>
-            </div>
-            <div id="popular-products-grid" class="home-products-grid">
-                <!-- Produits chargés via JavaScript -->
-            </div>
-            <div class="section-action">
-                <a href="menu.html" class="btn-secondary">Voir tout le menu</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pourquoi choisir NAGUIDA FOOD -->
-    <section class="home-section why-section">
-        <div class="container">
-            <div class="section-heading">
-                <span class="section-kicker">Notre promesse</span>
-                <h2>Pourquoi choisir NAGUIDA FOOD</h2>
-            </div>
-            <div class="why-grid">
-                <div class="why-item">
-                    <div class="why-icon">🍲</div>
-                    <h3>Cuisine authentique</h3>
-                    <p>Des recettes africaines généreuses, préparées avec des saveurs maison.</p>
-                </div>
-                <div class="why-item">
-                    <div class="why-icon">⚡</div>
-                    <h3>Commande rapide</h3>
-                    <p>Un menu clair, un panier simple et une commande finalisée en quelques clics.</p>
-                </div>
-                <div class="why-item">
-                    <div class="why-icon">🌿</div>
-                    <h3>Produits frais</h3>
-                    <p>Des plats préparés avec soin pour garder le goût, la texture et la qualité.</p>
-                </div>
-                <div class="why-item">
-                    <div class="why-icon">📍</div>
-                    <h3>Livraison locale</h3>
-                    <p>Livraison ou retrait selon vos besoins, avec suivi clair de la commande.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section Avis Clients -->
-    <section id="avis" class="avis-section">
-        <div class="container">
-            <!-- Header avec statistiques -->
-            <div class="avis-header-section">
-                <h2>💬 Ce que nos clients disent</h2>
-                <div class="avis-stats">
-                    <div class="stat-item">
-                        <span class="stat-number" id="total-reviews-count">0</span>
-                        <span class="stat-label">Avis</span>
-                    </div>
-                    <div class="stat-item">
-                        <div class="rating-display">
-                            <span class="rating-stars" id="average-stars">★★★★★</span>
-                            <span class="rating-number" id="average-rating-display">0.0</span>
-                        </div>
-                        <span class="stat-label">Note moyenne</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Contrôles du slider -->
-            <div class="avis-controls">
-               <!-- <div class="slider-info-continuous">
-                    <span class="continuous-label">🔄 Défilement continu</span>
-                    <span class="pause-hint">Survolez pour mettre en pause</span>
-                </div>-->
-                <button id="btn-add-review" class="btn-primary">✍️ Laisser un avis</button>
-            </div>
-
-            <!-- Slider des avis -->
-            <div class="reviews-slider-container">
-                <div id="reviews-slider" class="reviews-slider">
-                    <!-- Avis chargés via JavaScript -->
-                </div>
-                <div class="slider-dots" id="slider-dots">
-                    <!-- Points de navigation -->
-                </div>
-            </div>
-
-            <!-- Message si pas d'avis -->
-            <div id="no-reviews" class="no-reviews" style="display: none;">
-                <div class="no-reviews-icon">💭</div>
-                <h3>Aucun avis pour le moment</h3>
-                <p>Soyez le premier à partager votre expérience !</p>
-                <button class="btn-primary" onclick="document.getElementById('btn-add-review').click()">
-                    Laisser le premier avis
-                </button>
-            </div>
-        </div>
-    </section>
-
-    <!-- Modals -->
     <!-- Modal Connexion -->
     <div id="modal-login" class="modal">
         <div class="modal-content">
@@ -219,11 +109,7 @@
                         </div>
                     </div>
                     <button type="submit" class="btn-primary">Se connecter</button>
-                    
-                    <div class="divider">
-                        <span>OU</span>
-                    </div>
-                    
+                    <div class="divider"><span>OU</span></div>
                     <button type="button" class="btn-google" id="btn-google-login-client">
                         <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
                             <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
@@ -233,7 +119,6 @@
                         </svg>
                         Se connecter avec Google
                     </button>
-                    
                     <p>Pas de compte ? <a href="#" id="btn-signup">S'inscrire</a></p>
                 </form>
             </div>
@@ -270,13 +155,8 @@
                     <div class="form-group">
                         <input type="tel" id="signup-phone" placeholder="Téléphone" required>
                     </div>
-                    
                     <button type="submit" class="btn-primary">S'inscrire</button>
-                    
-                    <div class="divider">
-                        <span>OU</span>
-                    </div>
-                    
+                    <div class="divider"><span>OU</span></div>
                     <button type="button" class="btn-google" id="btn-google-signup-client">
                         <svg width="18" height="18" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
                             <path fill="#FFC107" d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12c0-6.627,5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24c0,11.045,8.955,20,20,20c11.045,0,20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"/>
@@ -286,21 +166,13 @@
                         </svg>
                         S'inscrire avec Google
                     </button>
-                    
                     <p>Déjà un compte ? <a href="#" onclick="closeModal('modal-signup'); openModal('modal-login');">Se connecter</a></p>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Modal pour ajouter un avis -->
-    
-    <!-- Panier fixe mobile -->
-    <button class="mobile-fixed-cart" id="mobile-fixed-cart" aria-label="Ouvrir le panier">
-        <span class="fixed-cart-icon">🛒</span>
-        <span class="fixed-cart-badge hidden" id="fixed-cart-count">0</span>
-    </button>
-
     <script src="js/app.js"></script>
+    <script src="js/commandes.js"></script>
 </body>
 </html>

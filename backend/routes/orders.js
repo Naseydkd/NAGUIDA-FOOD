@@ -90,7 +90,10 @@ router.post('/', async (req, res) => {
 // GET orders by user
 router.get('/user/:user_id', async (req, res) => {
   try {
-    const { rows } = await db.query('SELECT id FROM orders WHERE user_id=$1', [req.params.user_id]);
+    const { rows } = await db.query(
+      'SELECT id FROM orders WHERE user_id=$1 ORDER BY order_date DESC',
+      [req.params.user_id]
+    );
     const orders = await Promise.all(rows.map(r => getOrderWithItems(r.id)));
     res.json(orders);
   } catch (e) { res.status(500).json({ error: e.message }); }
